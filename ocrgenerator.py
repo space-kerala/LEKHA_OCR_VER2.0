@@ -271,6 +271,7 @@ builder.connect_signals(Handler())
 
 
 window = builder.get_object("main_window")
+window.set_icon_from_file('icon.png')
 window.show_all()
 
 Gtk.main()
