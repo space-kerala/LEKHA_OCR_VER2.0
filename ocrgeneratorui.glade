@@ -233,6 +233,7 @@
                 <property name="receives_default">True</property>
                 <property name="use_stock">True</property>
                 <property name="always_show_image">True</property>
+                <signal name="clicked" handler="generate_button_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
