@@ -14,12 +14,24 @@ from matplotlib.widgets import RectangleSelector
 import sys
 from matplotlib.patches import Rectangle
 import matplotlib
+from matplotlib.widgets import Button
 myendcordinates=[]
 overalapchecker=[]
-
+imgloc=0
 
 fig, ax = plt.subplots()
 point, = ax.plot([],[], marker="o", color="crimson")
+#undo last box and proceed buttons
+#axundo = plt.axes([0.7, 0.05, 0.1, 0.075])
+axundo = plt.axes([0.4, 0.01, 0.09,0.06])
+axproceed = plt.axes([0.5, 0.01, 0.095, 0.06])
+bnundo = Button(axundo, 'UNDO')
+bnundo.color = "red"
+#bnext.on_clicked()
+bnproceed = Button(axproceed, 'PROCEED')
+bnproceed.color = "green"
+#bprev.on_clicked()
+
 
 #handler class
 class Handler:
@@ -50,6 +62,7 @@ class Handler:
         if response == Gtk.ResponseType.OK:
             print("Open clicked")
             print("File selected: " + dialog.get_filename())
+            global imgloc
             imgloc = dialog.get_filename()
             sw = Gtk.ScrolledWindow()
             window = builder.get_object("main_window")
@@ -89,14 +102,10 @@ class Handler:
         os.system("simple-scan")
 
     def generate_button_clicked(self,widget):
-        img = np.array(Image.open('/home/space-kerala/Downloads/test1.png'), dtype=np.uint8)
-        #img = mpimg.imread('/home/sajaras/Downloads/saj.png')
-        #lum_img = img[:, :, 0]
-        #imgv = plt.imshow(lum_img)
-
-        #xdata = np.linspace(0,9*np.pi, num=301)
-        #ydata = np.sin(xdata)
-
+        imgep = builder.get_object("previmage")
+        print(imgloc)
+        #img = np.array(Image.open('/home/space-kerala/Downloads/test1.png'), dtype=np.uint8)
+        img = np.array(Image.open(imgloc), dtype=np.uint8)
         
         ax.imshow(img, aspect = 'equal',extent = None)
         
