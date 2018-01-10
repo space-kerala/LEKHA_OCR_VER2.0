@@ -36,7 +36,12 @@ bnundo.color = "red"
 bnproceed = Button(axproceed, 'PROCEED')
 bnproceed.color = "green"
 #bprev.on_clicked()
-
+usg1 =plt.figtext(0.26, 0.96, 'PRESS "ENTER" AFTER SELECTING TO CONFIRM THE SELECTION')
+usg2 = plt.figtext(0.3, 0.93, 'CLICK ON THE DRAWN RECTANGLES TO DELETE IT')
+usg1.set_weight('bold')
+usg1.set_color('brown')
+usg2.set_color('brown')
+usg2.set_weight('bold')
 
 #clearbuttonpassingdataclass
 class ButtonDataProcessor(object):
@@ -265,8 +270,24 @@ def onpick1(event):
         #rectevent = event
       #  patch.remove()
         print('onpick1 patch:', patch.get_path())
-        print("heigth=",height)  
-        connection_id = fig.canvas.mpl_connect('button_press_event', lambda event: onclick(event,patch,connection_id))   
+        print("heigth=",height)
+        patch.get_path()
+        dx1 = patch.get_x()
+        dy1 = patch.get_y()
+        dh1 = patch.get_height()
+        dw1 = patch.get_width() 
+        patch.get_path()
+        # patch.set_visible(False)
+        print(dx1,dy1,dw1,dh1)
+        patch.remove()
+        # matplotlib.axes.Axes.relim(self)
+        print('rectangle removed')
+        myendcordinates.remove((dx1,dy1,dw1,dh1))
+        print(myendcordinates)
+        dx2 = dx1 + dw1
+        dy2 = dy1 + dh1 
+        overalapchecker.remove((dx1,dy1,dx2,dy2))  
+       # connection_id = fig.canvas.mpl_connect('button_press_event', lambda event: onclick(event,patch,connection_id))   
         
 
 def onclick(event,patch,connection_id):
