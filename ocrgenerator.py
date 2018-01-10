@@ -38,6 +38,20 @@ bnproceed.color = "green"
 #bprev.on_clicked()
 
 
+#clearbuttonpassingdataclass
+class ButtonDataProcessor(object):
+    def __init__(self,bnclear,rect):
+        self.rect =rect
+        bnclear.on_clicked(self.process)
+
+    def process(self, event):
+        self.rect.set_visible(False)  
+        myendcordinates.clear()
+        overalapchecker.clear()
+        print(myendcordinates)
+
+
+
 #handler class
 class Handler:
     def onDeleteWindow(self, *args):
@@ -204,6 +218,9 @@ def press(event,x1,y1,x2,y2,cid):
         rect = plt.Rectangle( (min(x1,x2),min(y1,y2)), np.abs(x1-x2), np.abs(y1-y2),fill =False,picker=True)
         ax.add_patch(rect)
         fig.canvas.mpl_connect('key_press_event', lambda event: deletepress(event,rect,cid))
+        print(rect)
+        bnclearclick = ButtonDataProcessor(bnclear,rect)
+
        
 
       #  rect.set_visible(False)  
@@ -225,11 +242,7 @@ def deletepress(event,rect,cid):
         overalapchecker.clear()
         print(myendcordinates)
 
-def clearbutton_click(event):
-        rect.set_visible(False)  
-        myendcordinates.clear()
-        overalapchecker.clear()
-        print(myendcordinates)
+       
 
 #def callback(event):
   #  print (event.xdata, event.ydata)
@@ -291,7 +304,7 @@ builder.connect_signals(Handler())
 
 
 
-bnclear.on_clicked(clearbutton_click)
+
 window = builder.get_object("main_window")
 window.set_icon_from_file('icon.png')
 window.show_all()
