@@ -19,12 +19,17 @@ myendcordinates=[]
 overalapchecker=[]
 imgloc=0
 
+
+
 fig, ax = plt.subplots()
 point, = ax.plot([],[], marker="o", color="crimson")
 #undo last box and proceed buttons
 #axundo = plt.axes([0.7, 0.05, 0.1, 0.075])
+axclear = plt.axes([0.3, 0.01, 0.09,0.06])
 axundo = plt.axes([0.4, 0.01, 0.09,0.06])
 axproceed = plt.axes([0.5, 0.01, 0.095, 0.06])
+bnclear = Button(axclear, 'Clear All')
+bnclear.color = "orange"
 bnundo = Button(axundo, 'UNDO')
 bnundo.color = "red"
 #bnext.on_clicked()
@@ -194,10 +199,12 @@ def press(event,x1,y1,x2,y2,cid):
         print(myendcordinates)
         
 
-        #print(myendcordinates) 
+        #print(myendcordinates)
+        
         rect = plt.Rectangle( (min(x1,x2),min(y1,y2)), np.abs(x1-x2), np.abs(y1-y2),fill =False,picker=True)
         ax.add_patch(rect)
         fig.canvas.mpl_connect('key_press_event', lambda event: deletepress(event,rect,cid))
+       
 
       #  rect.set_visible(False)  
 
@@ -215,9 +222,14 @@ def deletepress(event,rect,cid):
     if event.key == 'delete':    
         rect.set_visible(False)  
         myendcordinates.clear()
+        overalapchecker.clear()
         print(myendcordinates)
 
-
+def clearbutton_click(event):
+        rect.set_visible(False)  
+        myendcordinates.clear()
+        overalapchecker.clear()
+        print(myendcordinates)
 
 #def callback(event):
   #  print (event.xdata, event.ydata)
@@ -229,6 +241,7 @@ def onpickrect(event):
    
     if isinstance(event.artist, Rectangle):
         print("hey you are inside a rectangle")
+
         
 
 def onpick1(event):
@@ -241,7 +254,7 @@ def onpick1(event):
         print('onpick1 patch:', patch.get_path())
         print("heigth=",height)  
         connection_id = fig.canvas.mpl_connect('button_press_event', lambda event: onclick(event,patch,connection_id))   
-
+        
 
 def onclick(event,patch,connection_id):
     if event.dblclick:
@@ -278,7 +291,7 @@ builder.connect_signals(Handler())
 
 
 
-
+bnclear.on_clicked(clearbutton_click)
 window = builder.get_object("main_window")
 window.set_icon_from_file('icon.png')
 window.show_all()
