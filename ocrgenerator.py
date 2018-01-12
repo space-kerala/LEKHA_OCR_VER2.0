@@ -15,6 +15,9 @@ import sys
 from matplotlib.patches import Rectangle
 import matplotlib
 from matplotlib.widgets import Button
+#layoutanalyser
+import cv2
+import sajhead
 myendcordinates=[]
 overalapchecker=[]
 imgloc=0
@@ -126,16 +129,35 @@ class Handler:
         os.system("simple-scan")
 
     def generate_button_clicked(self,widget):
+        im = cv2.imread(imgloc,0)
+        a= sajhead.head(im)
+       
+
         imgep = builder.get_object("previmage")
         print(imgloc)
         #img = np.array(Image.open('/home/space-kerala/Downloads/test1.png'), dtype=np.uint8)
         img = np.array(Image.open(imgloc), dtype=np.uint8)
         
         ax.imshow(img, aspect = 'equal',extent = None)
+
+        #print (a)
+        #print(a[0][0])
+        for r in a:
+            #print (r)
+            #print (r[0])
+            lx1 = r[0]
+            ly1 = r[1]
+            lx2 = r[0] + r[2]
+            ly2 = r[1] + r[3]
+            rect = plt.Rectangle( (min(lx1,lx2),min(ly1,ly2)), np.abs(lx1-lx2), np.abs(ly1-ly2),fill =False,picker=True)
+            ax.add_patch(rect)
+            myendcordinates.append((lx1,ly1,r[2],r[3]))
+            overalapchecker.append((lx1,ly1,lx2,ly2))
         
         fig.canvas.mpl_connect('pick_event', onpick1)
 
         plt.show()
+
             
 
 def checkoverlap(l1x,l1y,r1x,r1y,l2x,l2y,r2x,r2y):
