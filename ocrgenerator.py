@@ -130,9 +130,10 @@ class Handler:
 
     def generate_button_clicked(self,widget):
         im = cv2.imread(imgloc,0)
-        a= sajhead.head(im)
-       
-
+        #a= sajhead.head(im)
+        h,b=sajhead.boundary(im.copy())
+        a = h + b 
+        print(a)
         imgep = builder.get_object("previmage")
         print(imgloc)
         #img = np.array(Image.open('/home/space-kerala/Downloads/test1.png'), dtype=np.uint8)

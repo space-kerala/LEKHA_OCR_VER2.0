@@ -16,6 +16,7 @@ overalapchecker=[]
 
 
 
+
 def checkoverlap(l1x,l1y,r1x,r1y,l2x,l2y,r2x,r2y):
   #checking overlap
         
@@ -163,12 +164,24 @@ def onpick1(event):
         patch = event.artist
         height=patch.get_height()
         #rectevent = event
-      #  patch.remove()
+        dx1 = patch.get_x()
+        dy1 = patch.get_y()
+        dh1 = patch.get_height()
+        dw1 = patch.get_width() 
+        patch.get_path()
+        
         print('onpick1 patch:', patch.get_path())
-        print("heigth=",height)  
-        connection_id = fig.canvas.mpl_connect('button_press_event', lambda event: onclick(event,patch,connection_id))   
-
-
+        # patch.set_visible(False)
+        print(dx1,dy1,dw1,dh1)
+        patch.remove()
+        # matplotlib.axes.Axes.relim(self)
+        print('rectangle removed')
+        myendcordinates.remove((dx1,dy1,dw1,dh1))
+        print(myendcordinates)
+        dx2 = dx1 + dw1
+        dy2 = dy1 + dh1 
+        overalapchecker.remove((dx1,dy1,dx2,dy2))  
+       
 def onclick(event,patch,connection_id):
     if event.dblclick:
         patch =event.artist
@@ -194,6 +207,8 @@ def onclick(event,patch,connection_id):
         
         #patch.relim()
         # print(overalapchecker)  
+
+
 
 fig.canvas.mpl_connect('pick_event', onpick1)
 
