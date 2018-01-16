@@ -48,7 +48,7 @@ class LayoutAnalysedfigure():
         self.usg2.set_color('brown')
         self.usg2.set_weight('bold')
 
-
+        self.rect = [] 
         self.rs = RectangleSelector(self.ax,self.line_select_callback,
                        drawtype='box', useblit=False, button=[1], 
                        minspanx=2, minspany=2, spancoords='pixels', 
@@ -122,11 +122,11 @@ class LayoutAnalysedfigure():
 
             #print(myendcordinates)
             
-            self.rect = plt.Rectangle( (min(x1,x2),min(y1,y2)), np.abs(x1-x2), np.abs(y1-y2),fill =False,picker=True)
-            self.ax.add_patch(self.rect)
+            self.rect.append(plt.Rectangle( (min(x1,x2),min(y1,y2)), np.abs(x1-x2), np.abs(y1-y2),fill =False,picker=True))
+            self.ax.add_patch(self.rect[-1])
             #self.fig.canvas.mpl_connect('key_press_event', lambda event: self.deletepress(event,rect,cid))
-            print(self.rect)
-            self.bnundo.on_clicked(self.process)
+            print(self.rect[-1])
+           
            
 
     def outsideclick(self,event,cid):
@@ -155,25 +155,85 @@ class LayoutAnalysedfigure():
             dw1 = patch.get_width() 
             patch.get_path()
             # patch.set_visible(False)
-            print(dx1,dy1,dw1,dh1)
             patch.remove()
+            print(len(self.rect))
+            print(patch)
+            self.rect.remove(patch)
+            print(len(self.rect))
+            #print(patch)
+           
+
             # matplotlib.axes.Axes.relim(self)
             print('rectangle removed')
             myendcordinates.remove((dx1,dy1,dw1,dh1))
-            print(myendcordinates)
+            for i, e in reversed(list(enumerate(self.rect))):
+                print(i, e)
+            #print(myendcordinates)
             dx2 = dx1 + dw1
             dy2 = dy1 + dh1 
+            #print(dx1,dy1,dx2,dy2)
+            #remrect = Rectangle( (min(dx1,dx2),min(dy1,dy2)), np.abs(dx1-dx2), np.abs(dy1-dy2))
+            #dwx =int(min(dx1,dx2))
+            #dwy =int(min(dy,dy2))
+
+           # print(dwr) 
+          #  print(remrect)
+                 
+            print(len(self.rect))
             overalapchecker.remove((dx1,dy1,dx2,dy2))  
         
 
    
    
-    def process(self,event):
-        print(self.rect)
-        self.rect.set_visible(False)  
-        myendcordinates.clear()
-        overalapchecker.clear()
+    def boxundoing(self,event):
+        #print(self.rect)
+      
+        #print(self.rect[-1])
+        self.rect[-1].set_visible(False)
+        self.rect.pop() 
+        #n = len(self.rect)
+        #print(n)
+        #for i, e in reversed(list(enumerate(self.rect))):
+        #    if e.get_visible() == True :
+        #        print(i, e)
+        #        print(e.get_visible())
+        #        e.set_visible(False)
+        #        print(e.get_visible())
+        #        break
+        myendcordinates.pop()
+        n = len(self.rect)
+        print(n)
+        p = len(myendcordinates)
+        print("length of myendcordinates = %d" %(p))
+        overalapchecker.pop()
+        q= len(overalapchecker)
+        print("length of myendcordinates = %d" %(q))
         print(myendcordinates)
+        for i, e in reversed(list(enumerate(self.rect))):
+            print(i, e)
+
+    def boxclearing(self,event):
+        
+       # self.rect[-1].set_visible(False)
+       # self.rect.pop() 
+        #n = len(self.rect)
+        #print(n)
+        for i, e in reversed(list(enumerate(self.rect))):
+            e.set_visible(False)
+           
+        myendcordinates.clear()
+        self.rect.clear()
+        n = len(self.rect)
+        print(n)
+        p = len(myendcordinates)
+        print("length of myendcordinates = %d" %(p))
+        overalapchecker.clear()
+        q= len(overalapchecker)
+        print("length of myendcordinates = %d" %(q))
+        print(myendcordinates)
+        for i, e in reversed(list(enumerate(self.rect))):
+            print(i, e)
+
 
 
 
@@ -237,6 +297,7 @@ class Handler:
         filter_img.add_mime_type("image/jpg")
         filter_img.add_mime_type("image/png")
         filter_img.add_mime_type("image/bmp")
+        filter_img.add_mime_type("image/tiff")
         dialog.add_filter(filter_img)
 
         filter_any = Gtk.FileFilter()
@@ -274,12 +335,14 @@ class Handler:
             ly1 = r[1]
             lx2 = r[0] + r[2]
             ly2 = r[1] + r[3]
-            figureobject.rect = plt.Rectangle( (min(lx1,lx2),min(ly1,ly2)), np.abs(lx1-lx2), np.abs(ly1-ly2),fill =False,picker=True)
-            figureobject.ax.add_patch(figureobject.rect)
+            figureobject.rect.append(plt.Rectangle( (min(lx1,lx2),min(ly1,ly2)), np.abs(lx1-lx2), np.abs(ly1-ly2),fill =False,picker=True))
+            figureobject.ax.add_patch(figureobject.rect[-1])
             myendcordinates.append((lx1,ly1,r[2],r[3]))
             overalapchecker.append((lx1,ly1,lx2,ly2))
             
         figureobject.fig.canvas.mpl_connect('pick_event', figureobject.onpick1)
+        figureobject.bnundo.on_clicked(figureobject.boxundoing)
+        figureobject.bnclear.on_clicked(figureobject.boxclearing)
         plt.show() 
          
             
