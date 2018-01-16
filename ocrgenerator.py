@@ -22,41 +22,215 @@ myendcordinates=[]
 overalapchecker=[]
 imgloc=0
 
+class LayoutAnalysedfigure():
+    def __init__(self):
+        self.fig = plt.figure()
+        self.ax = self.fig.add_subplot(111)
+        self.point = self.ax.plot([],[], marker="o", color="crimson")
+        #clear button     
+        self.axclear = plt.axes([0.3, 0.01, 0.09,0.06])
+        self.bnclear = Button(self.axclear, 'Clear All')
+        self.bnclear.color = "orange"
+        #undo button
+        self.axundo = plt.axes([0.4, 0.01, 0.09,0.06])
+        self.bnundo = Button(self.axundo, 'UNDO')
+        self.bnundo.color = "red"
+        #proceedbutton
+        self.axproceed = plt.axes([0.5, 0.01, 0.095, 0.06])
+        self.bnproceed = Button(self.axproceed, 'PROCEED')
+        self.bnproceed.color = "green"
+        #usage 1
+        self.usg1 =plt.figtext(0.26, 0.96, 'PRESS "ENTER" AFTER SELECTING TO CONFIRM THE SELECTION')
+        self.usg1.set_color('brown')
+        self.usg1.set_weight('bold')
+        #usage 2
+        self.usg2 = plt.figtext(0.3, 0.93, 'CLICK ON THE DRAWN RECTANGLES TO DELETE IT')
+        self.usg2.set_color('brown')
+        self.usg2.set_weight('bold')
 
 
-fig, ax = plt.subplots()
-point, = ax.plot([],[], marker="o", color="crimson")
-#undo last box and proceed buttons
-#axundo = plt.axes([0.7, 0.05, 0.1, 0.075])
-axclear = plt.axes([0.3, 0.01, 0.09,0.06])
-axundo = plt.axes([0.4, 0.01, 0.09,0.06])
-axproceed = plt.axes([0.5, 0.01, 0.095, 0.06])
-bnclear = Button(axclear, 'Clear All')
-bnclear.color = "orange"
-bnundo = Button(axundo, 'UNDO')
-bnundo.color = "red"
+        self.rs = RectangleSelector(self.ax,self.line_select_callback,
+                       drawtype='box', useblit=False, button=[1], 
+                       minspanx=2, minspany=2, spancoords='pixels', 
+                       interactive=True)
+
+    def checkoverlap(self,l1x,l1y,r1x,r1y,l2x,l2y,r2x,r2y):
+      #checking overlap
+            
+        # If one rectangle is on left side of other
+        if l1x > r2x or l2x > r1x :
+            print("i am printing in first if condition")
+            return False
+     
+        #If one rectangle is above other
+        if l1y > r2y or l2y > r1y :
+            print("i am printing in second if condition")
+            return False    
+        return True
+
+
+    def line_select_callback(self,eclick, erelease):
+        #print(eclick)
+        #print(erelease)
+        x1, y1 = eclick.xdata, eclick.ydata
+        x2, y2 = erelease.xdata, erelease.ydata
+        rid = self.fig.canvas.mpl_connect('button_press_event', lambda event: self.outsideclick(event,cid))
+        cid = self.fig.canvas.mpl_connect('key_press_event', lambda event: self.press(event,x1,y1,x2,y2,cid))
+        #if it is inside already drawn rectangles
+        l2x = x1 
+        l2y = y1
+        r2x = x2
+        r2y = y2
+        count =len(overalapchecker)
+        
+        i = 0
+        while i < count:
+            l1x = overalapchecker[i][0]
+            l1y = overalapchecker[i][1]
+            r1x = overalapchecker[i][2]
+            r1y = overalapchecker[i][3]
+            print(l1x,l1y,r1x,r1y)
+            ovrlap = self.checkoverlap(l1x,l1y,r1x,r1y,l2x,l2y,r2x,r2y)
+            print(ovrlap)  
+            if(ovrlap) :
+                print(ovrlap)
+                print(cid)     
+                self.rs.to_draw.set_visible(False)
+                self.fig.canvas.mpl_disconnect(cid)
+               
+                  
+          
+           #print("overlap[i]=",overalapchecker[i][1])
+            i = i +1 
+            
+       
+       
 #bnext.on_clicked()
-bnproceed = Button(axproceed, 'PROCEED')
-bnproceed.color = "green"
 #bprev.on_clicked()
-usg1 =plt.figtext(0.26, 0.96, 'PRESS "ENTER" AFTER SELECTING TO CONFIRM THE SELECTION')
-usg2 = plt.figtext(0.3, 0.93, 'CLICK ON THE DRAWN RECTANGLES TO DELETE IT')
-usg1.set_weight('bold')
-usg1.set_color('brown')
-usg2.set_color('brown')
-usg2.set_weight('bold')
 
-#clearbuttonpassingdataclass
-class ButtonDataProcessor(object):
-    def __init__(self,bnclear,rect):
-        self.rect =rect
-        bnclear.on_clicked(self.process)
+    def press(self,event,x1,y1,x2,y2,cid):
+        print('press', event.key)
+       # print (x1,y1,x2,y2,cid)
+        sys.stdout.flush()
+        if event.key == 'enter':
+            print("Enter Key pressed")
+            print("current selection box id=",cid)
+            width = x2-x1
+            height = y2-y1
+            print(width,height)
+            myendcordinates.append((x1,y1,width,height))
+            overalapchecker.append((x1,y1,x2,y2))
+            print(myendcordinates)
+            
 
-    def process(self, event):
+            #print(myendcordinates)
+            
+            self.rect = plt.Rectangle( (min(x1,x2),min(y1,y2)), np.abs(x1-x2), np.abs(y1-y2),fill =False,picker=True)
+            self.ax.add_patch(self.rect)
+            #self.fig.canvas.mpl_connect('key_press_event', lambda event: self.deletepress(event,rect,cid))
+            print(self.rect)
+            self.bnundo.on_clicked(self.process)
+           
+
+          #  rect.set_visible(False)  
+
+       # elif event.key != 'enter':    
+       #        print("disconnecting id=",cid) 
+       #        plt.disconnect(cid)               
+
+    def outsideclick(self,event,cid):
+      #  print(event.xdata,event.ydata)
+        print("disconnecting",cid)
+       # plt.disconnect(cid)
+        self.fig.canvas.mpl_disconnect(cid)     
+        
+    #def deletepress(self,event,rect,cid):
+     #   if event.key == 'delete':    
+      #      self.rect.set_visible(False)  
+       #     myendcordinates.clear()
+       #     overalapchecker.clear()
+        #    print(myendcordinates)
+
+           
+
+    #def callback(event):
+      #  print (event.xdata, event.ydata)
+
+
+    #plt.disconnect(cid)
+    #fig.canvas.callbacks.connect('button_press_event', callback)
+    def onpickrect(self,event):
+       
+        if isinstance(event.artist, Rectangle):
+            print("hey you are inside a rectangle")
+
+            
+
+    def onpick1(self,event):
+       
+        if isinstance(event.artist, Rectangle):
+            patch = event.artist
+            height=patch.get_height()
+            #rectevent = event
+          #  patch.remove()
+            print('onpick1 patch:', patch.get_path())
+            print("heigth=",height)
+            patch.get_path()
+            dx1 = patch.get_x()
+            dy1 = patch.get_y()
+            dh1 = patch.get_height()
+            dw1 = patch.get_width() 
+            patch.get_path()
+            # patch.set_visible(False)
+            print(dx1,dy1,dw1,dh1)
+            patch.remove()
+            # matplotlib.axes.Axes.relim(self)
+            print('rectangle removed')
+            myendcordinates.remove((dx1,dy1,dw1,dh1))
+            print(myendcordinates)
+            dx2 = dx1 + dw1
+            dy2 = dy1 + dh1 
+            overalapchecker.remove((dx1,dy1,dx2,dy2))  
+           # connection_id = fig.canvas.mpl_connect('button_press_event', lambda event: onclick(event,patch,connection_id))   
+            
+
+    def onclick(self,event,patch,connection_id):
+        if event.dblclick:
+            patch =event.artist
+          #  print('double clicked')
+         #   print(patch)
+            patch.get_path()
+            dx1 = patch.get_x()
+            dy1 = patch.get_y()
+            dh1 = patch.get_height()
+            dw1 = patch.get_width() 
+            patch.get_path()
+            # patch.set_visible(False)
+            print(dx1,dy1,dw1,dh1)
+            patch.remove()
+            # matplotlib.axes.Axes.relim(self)
+            print('rectangle removed')
+            myendcordinates.remove((dx1,dy1,dw1,dh1))
+            print(myendcordinates)
+            dx2 = dx1 + dw1
+            dy2 = dy1 + dh1 
+            overalapchecker.remove((dx1,dy1,dx2,dy2))
+            self.fig.canvas.mpl_disconnect(connection_id)
+   
+    def process(self,event):
+        print(self.rect)
         self.rect.set_visible(False)  
         myendcordinates.clear()
         overalapchecker.clear()
         print(myendcordinates)
+
+#clearbuttonpassingdataclass
+#class ButtonDataProcessor(object):
+  #  def __init__(self,bnclear,rect):
+   #     self.rect =rect
+    #    bnclear.on_clicked(self.process)
+
+   
 
 
 
@@ -91,12 +265,12 @@ class Handler:
             print("File selected: " + dialog.get_filename())
             global imgloc
             imgloc = dialog.get_filename()
-            sw = Gtk.ScrolledWindow()
+            sw = builder.get_object("scrolled_window")   
             window = builder.get_object("main_window")
-            window.add(sw)
+
             img = builder.get_object("previmage")
             img.set_from_file(imgloc)
-            sw.add_with_viewport(img)
+            #sw.add(img)
 
 
         elif response == Gtk.ResponseType.CANCEL:
@@ -129,6 +303,9 @@ class Handler:
         os.system("simple-scan")
 
     def generate_button_clicked(self,widget):
+        overalapchecker.clear()
+        myendcordinates.clear()
+        figureobject = LayoutAnalysedfigure()
         im = cv2.imread(imgloc,0)
         #a= sajhead.head(im)
         h,b=sajhead.boundary(im.copy())
@@ -139,7 +316,7 @@ class Handler:
         #img = np.array(Image.open('/home/space-kerala/Downloads/test1.png'), dtype=np.uint8)
         img = np.array(Image.open(imgloc), dtype=np.uint8)
         
-        ax.imshow(img, aspect = 'equal',extent = None)
+        figureobject.ax.imshow(img, aspect = 'equal',extent = None)
 
         #print (a)
         #print(a[0][0])
@@ -150,65 +327,17 @@ class Handler:
             ly1 = r[1]
             lx2 = r[0] + r[2]
             ly2 = r[1] + r[3]
-            rect = plt.Rectangle( (min(lx1,lx2),min(ly1,ly2)), np.abs(lx1-lx2), np.abs(ly1-ly2),fill =False,picker=True)
-            ax.add_patch(rect)
+            figureobject.rect = plt.Rectangle( (min(lx1,lx2),min(ly1,ly2)), np.abs(lx1-lx2), np.abs(ly1-ly2),fill =False,picker=True)
+            figureobject.ax.add_patch(figureobject.rect)
             myendcordinates.append((lx1,ly1,r[2],r[3]))
             overalapchecker.append((lx1,ly1,lx2,ly2))
-        
-        fig.canvas.mpl_connect('pick_event', onpick1)
-
-        plt.show()
-
+            
+        figureobject.fig.canvas.mpl_connect('pick_event', figureobject.onpick1)
+        plt.show() 
+         
             
 
-def checkoverlap(l1x,l1y,r1x,r1y,l2x,l2y,r2x,r2y):
-  #checking overlap
-        
-    # If one rectangle is on left side of other
-    if l1x > r2x or l2x > r1x :
-        print("i am printing in first if condition")
-        return False
- 
-    #If one rectangle is above other
-    if l1y > r2y or l2y > r1y :
-        print("i am printing in second if condition")
-        return False    
-    return True
 
-
-def line_select_callback(eclick, erelease):
-    #print(eclick)
-    #print(erelease)
-    x1, y1 = eclick.xdata, eclick.ydata
-    x2, y2 = erelease.xdata, erelease.ydata
-    rid = fig.canvas.mpl_connect('button_press_event', lambda event: outsideclick(event,cid))
-    cid = fig.canvas.mpl_connect('key_press_event', lambda event: press(event,x1,y1,x2,y2,cid))
-    #if it is inside already drawn rectangles
-    l2x = x1 
-    l2y = y1
-    r2x = x2
-    r2y = y2
-    count =len(overalapchecker)
-    
-    i = 0
-    while i < count:
-        l1x = overalapchecker[i][0]
-        l1y = overalapchecker[i][1]
-        r1x = overalapchecker[i][2]
-        r1y = overalapchecker[i][3]
-        print(l1x,l1y,r1x,r1y)
-        ovrlap = checkoverlap(l1x,l1y,r1x,r1y,l2x,l2y,r2x,r2y)
-        print(ovrlap)  
-        if(ovrlap) :
-            print(ovrlap)
-            print(cid)     
-            rs.to_draw.set_visible(False)
-            fig.canvas.mpl_disconnect(cid)
-           
-              
-      
-       #print("overlap[i]=",overalapchecker[i][1])
-        i = i +1 
         
    
    
@@ -218,123 +347,12 @@ def line_select_callback(eclick, erelease):
    # ax.add_patch(rect)
 
 
-rs = RectangleSelector(ax,line_select_callback,
-                       drawtype='box', useblit=False, button=[1], 
-                       minspanx=2, minspany=2, spancoords='pixels', 
-                       interactive=True)
 
 
 
 
-def press(event,x1,y1,x2,y2,cid):
-    print('press', event.key)
-   # print (x1,y1,x2,y2,cid)
-    sys.stdout.flush()
-    if event.key == 'enter':
-        print("Enter Key pressed")
-        print("current selection box id=",cid)
-        width = x2-x1
-        height = y2-y1
-        print(width,height)
-        myendcordinates.append((x1,y1,width,height))
-        overalapchecker.append((x1,y1,x2,y2))
-        print(myendcordinates)
-        
-
-        #print(myendcordinates)
-        
-        rect = plt.Rectangle( (min(x1,x2),min(y1,y2)), np.abs(x1-x2), np.abs(y1-y2),fill =False,picker=True)
-        ax.add_patch(rect)
-        fig.canvas.mpl_connect('key_press_event', lambda event: deletepress(event,rect,cid))
-        print(rect)
-        bnclearclick = ButtonDataProcessor(bnclear,rect)
-
-       
-
-      #  rect.set_visible(False)  
-
-   # elif event.key != 'enter':    
-   #        print("disconnecting id=",cid) 
-   #        plt.disconnect(cid)               
-
-def outsideclick(event,cid):
-  #  print(event.xdata,event.ydata)
-    print("disconnecting",cid)
-   # plt.disconnect(cid)
-    fig.canvas.mpl_disconnect(cid)     
-    
-def deletepress(event,rect,cid):
-    if event.key == 'delete':    
-        rect.set_visible(False)  
-        myendcordinates.clear()
-        overalapchecker.clear()
-        print(myendcordinates)
-
-       
-
-#def callback(event):
-  #  print (event.xdata, event.ydata)
 
 
-#plt.disconnect(cid)
-#fig.canvas.callbacks.connect('button_press_event', callback)
-def onpickrect(event):
-   
-    if isinstance(event.artist, Rectangle):
-        print("hey you are inside a rectangle")
-
-        
-
-def onpick1(event):
-   
-    if isinstance(event.artist, Rectangle):
-        patch = event.artist
-        height=patch.get_height()
-        #rectevent = event
-      #  patch.remove()
-        print('onpick1 patch:', patch.get_path())
-        print("heigth=",height)
-        patch.get_path()
-        dx1 = patch.get_x()
-        dy1 = patch.get_y()
-        dh1 = patch.get_height()
-        dw1 = patch.get_width() 
-        patch.get_path()
-        # patch.set_visible(False)
-        print(dx1,dy1,dw1,dh1)
-        patch.remove()
-        # matplotlib.axes.Axes.relim(self)
-        print('rectangle removed')
-        myendcordinates.remove((dx1,dy1,dw1,dh1))
-        print(myendcordinates)
-        dx2 = dx1 + dw1
-        dy2 = dy1 + dh1 
-        overalapchecker.remove((dx1,dy1,dx2,dy2))  
-       # connection_id = fig.canvas.mpl_connect('button_press_event', lambda event: onclick(event,patch,connection_id))   
-        
-
-def onclick(event,patch,connection_id):
-    if event.dblclick:
-        patch =event.artist
-      #  print('double clicked')
-     #   print(patch)
-        patch.get_path()
-        dx1 = patch.get_x()
-        dy1 = patch.get_y()
-        dh1 = patch.get_height()
-        dw1 = patch.get_width() 
-        patch.get_path()
-        # patch.set_visible(False)
-        print(dx1,dy1,dw1,dh1)
-        patch.remove()
-        # matplotlib.axes.Axes.relim(self)
-        print('rectangle removed')
-        myendcordinates.remove((dx1,dy1,dw1,dh1))
-        print(myendcordinates)
-        dx2 = dx1 + dw1
-        dy2 = dy1 + dh1 
-        overalapchecker.remove((dx1,dy1,dx2,dy2))
-        fig.canvas.mpl_disconnect(connection_id)
         
         #patch.relim()
         # print(overalapchecker)  
