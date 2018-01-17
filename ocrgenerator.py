@@ -153,24 +153,35 @@ class LayoutAnalysedfigure():
             dy1 = patch.get_y()
             dh1 = patch.get_height()
             dw1 = patch.get_width() 
+            dx2 = dx1 + dw1
+            dy2 = dy1 + dh1 
             patch.get_path()
             # patch.set_visible(False)
             patch.remove()
             print(len(self.rect))
             print(patch)
-            self.rect.remove(patch)
+            
+            if patch in self.rect :
+                print("yes present")
+                self.rect.remove(patch)
+                myendcordinates.remove((dx1,dy1,dw1,dh1))
+                overalapchecker.remove((dx1,dy1,dx2,dy2))
+                print('rectangle removed')
+            else :
+                print ("%s not present" %(patch)) 
+
+            
             print(len(self.rect))
             #print(patch)
            
 
             # matplotlib.axes.Axes.relim(self)
-            print('rectangle removed')
-            myendcordinates.remove((dx1,dy1,dw1,dh1))
+          
+           
             for i, e in reversed(list(enumerate(self.rect))):
                 print(i, e)
             #print(myendcordinates)
-            dx2 = dx1 + dw1
-            dy2 = dy1 + dh1 
+           
             #print(dx1,dy1,dx2,dy2)
             #remrect = Rectangle( (min(dx1,dx2),min(dy1,dy2)), np.abs(dx1-dx2), np.abs(dy1-dy2))
             #dwx =int(min(dx1,dx2))
@@ -180,7 +191,7 @@ class LayoutAnalysedfigure():
           #  print(remrect)
                  
             print(len(self.rect))
-            overalapchecker.remove((dx1,dy1,dx2,dy2))  
+             
         
 
    
