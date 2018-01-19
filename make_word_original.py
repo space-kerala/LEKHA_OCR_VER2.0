@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 def form_word(list):
     i=0
-    string=''
-    list =[str(i) for i in list ]
+    
+    string =''
+
+    list =[i.decode('utf-8') for i in list ]
+    #print(((list[0])))
     while(i<len(list)):
         if(i==(len(list)-1))and(list[i]in['o','0','ഠ']):
             string=string+'ം'

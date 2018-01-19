@@ -25,6 +25,12 @@ myendcordinates=[]
 overalapchecker=[]
 imgloc=0
 
+class ProgressBarWindow():
+    def __init__(self):
+        self.progresswindow = builder.get_object("progressbar_window")
+        self.progresswindow.set_transient_for(window)
+        self.progresswindow.show_all()
+
 class LayoutAnalysedfigure():
     def __init__(self):
         self.fig = plt.figure()
@@ -251,11 +257,12 @@ class LayoutAnalysedfigure():
     def proceedtoocr(self,event):
         #do cutting image and calling ocr one by one later
         plt.close('all')
+        #progressw =  ProgressBarWindow()    
         img = cv2.imread(imgloc,0)
         text = ocr.lekha_run(img)
         strtext = str(text)
-        self.textview = builder.get_object("outputtextview")
-        self.textview.get_buffer().set_text(strtext)
+        textview = builder.get_object("outputtextview")
+        textview.get_buffer().set_text(strtext)
         f = open('test.txt', 'w')
         f.write(strtext)
         f.close()
@@ -295,6 +302,10 @@ class Handler:
             imgloc = dialog.get_filename()
             sw = builder.get_object("scrolled_window")   
             window = builder.get_object("main_window")
+            
+            #clear the text area
+            textviewinitial = builder.get_object("outputtextview")
+            textviewinitial.get_buffer().set_text('')
 
             img = builder.get_object("previmage")
             img.set_from_file(imgloc)
