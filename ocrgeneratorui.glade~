@@ -260,7 +260,7 @@
             <property name="can_focus">True</property>
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
-            <property name="position">1000</property>
+            <property name="position">750</property>
             <property name="position_set">True</property>
             <child>
               <object class="GtkScrolledWindow" id="scrolled_window">

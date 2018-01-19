@@ -18,6 +18,9 @@ from matplotlib.widgets import Button
 #layoutanalyser
 import cv2
 import sajhead
+#ocr
+import lekha_work as ocr
+
 myendcordinates=[]
 overalapchecker=[]
 imgloc=0
@@ -244,11 +247,18 @@ class LayoutAnalysedfigure():
         print(myendcordinates)
         for i, e in reversed(list(enumerate(self.rect))):
             print(i, e)
-
-
-
-
-   
+    
+    def proceedtoocr(self,event):
+        #do cutting image and calling ocr one by one later
+        plt.close('all')
+        img = cv2.imread(imgloc,0)
+        text = ocr.lekha_run(img)
+        strtext = str(text)
+        self.textview = builder.get_object("outputtextview")
+        self.textview.get_buffer().set_text(strtext)
+        f = open('test.txt', 'w')
+        f.write(strtext)
+        f.close()
 
 
 
@@ -354,6 +364,7 @@ class Handler:
         figureobject.fig.canvas.mpl_connect('pick_event', figureobject.onpick1)
         figureobject.bnundo.on_clicked(figureobject.boxundoing)
         figureobject.bnclear.on_clicked(figureobject.boxclearing)
+        figureobject.bnproceed.on_clicked(figureobject.proceedtoocr)
         plt.show() 
          
             
