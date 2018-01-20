@@ -256,15 +256,31 @@ class LayoutAnalysedfigure():
     
     def proceedtoocr(self,event):
         #do cutting image and calling ocr one by one later
+        outputstring =''
         plt.close('all')
         #progressw =  ProgressBarWindow()    
         img = cv2.imread(imgloc,0)
-        text = ocr.lekha_run(img)
-        strtext = str(text)
+        print(len(myendcordinates))
+        for c in myendcordinates:
+           #print(c[0])
+           # print(c[1])
+           # print(c[2])
+           # print(c[3])
+            x = int(c[0])
+            y = int(c[1])
+            h = int(c[3])
+            w = int(c[2])
+            crop_img = img[y:y+h, x:x+w]
+            text = ocr.lekha_run(crop_img)
+            filename = str(c[0]) + ".jpg"
+            cv2.imwrite(filename,crop_img)
+            strtext = str(text)
+            outputstring = outputstring + "\n" + strtext
+            #print(strtext)
         textview = builder.get_object("outputtextview")
-        textview.get_buffer().set_text(strtext)
+        textview.get_buffer().set_text(outputstring)
         f = open('test.txt', 'w')
-        f.write(strtext)
+        f.write(outputstring)
         f.close()
 
 
