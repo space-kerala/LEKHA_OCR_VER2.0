@@ -258,7 +258,7 @@ class LayoutAnalysedfigure():
         #do cutting image and calling ocr one by one later
         outputstring =''
         plt.close('all')
-        #progressw =  ProgressBarWindow()    
+       # progressw =  ProgressBarWindow()    
         img = cv2.imread(imgloc,0)
         print(len(myendcordinates))
         for c in myendcordinates:
@@ -353,7 +353,36 @@ class Handler:
         filter_any.add_pattern("*")
         dialog.add_filter(filter_any)
     
-  
+    def savetextbuttonclicked(self, widget):
+        print ('saveButton clicked')
+        savechooser = Gtk.FileChooserDialog("Save to text", None,
+            Gtk.FileChooserAction.SAVE,
+            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+             Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
+        #savechooser = Gtk.FileChooserDialog(title='Save File', action=Gtk.FILE_CHOOSER_ACTION_SAVE, 
+         #                                               buttons=(Gtk.STOCK_CANCEL, Gtk.RESPONSE_CANCEL,
+         #                                               Gtk.STOCK_SAVE, Gtk.RESPONSE_OK))
+        response = savechooser.run() 
+        if response == Gtk.ResponseType.OK:
+            filename = savechooser.get_filename()
+            print(filename, 'selected.')
+            textview = builder.get_object("outputtextview")
+            textbuffer = textview.get_buffer()
+            text = textbuffer.get_text(textbuffer.get_start_iter(),textbuffer.get_end_iter(),True)
+
+           # text = textview.get_text(textview.get_start_iter(),
+            #            buf.get_end_iter(),
+             #           True)
+            print(text)
+            try:
+                open(filename, 'w').write(text)
+            except SomeError as err:
+                print('Could not save %s: %s' % (filename, err))
+        
+        elif response == Gtk.ResponseType.CANCEL:
+            print("Cancel clicked") 
+        
+        savechooser.destroy()
 
     def scan_button_clicked_cb(self, widget):
         os.system("simple-scan")
