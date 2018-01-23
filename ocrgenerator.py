@@ -15,6 +15,10 @@ import sys
 from matplotlib.patches import Rectangle
 import matplotlib
 from matplotlib.widgets import Button
+import json
+#scanner
+import pyinsane2
+import datetime
 #layoutanalyser
 import cv2
 import sajhead
@@ -289,9 +293,79 @@ class LayoutAnalysedfigure():
 class Handler:
     def onDeleteWindow(self, *args):
         Gtk.main_quit(*args)
+    
+    def on_preference(self, widget):
+        preference_dialog = builder.get_object("preferencewindow")
+        preference_dialog.set_transient_for(window)
+        #setting current conf.json value to clf filechooser buttons
+        jsonFile = open('conf.json', 'r')
+        conf = json.load(jsonFile)
+        ws_dir = conf["workspace_dir"]
+        print(ws_dir)
+        clf_path =conf['clf_path']
+        clf_folder = conf['clf_fold']
+        workspacebutton = builder.get_object("workspace")
+        workspacebutton.set_filename(ws_dir)
+        clffolderbutton = builder.get_object("clf_folder_button")
+        clffolderbutton.set_filename( clf_folder)
+        clfpathbutton = builder.get_object("clf_path_button")
+        clfpathbutton.set_filename( clf_path)
+        jsonFile.close()        
 
+        preference_dialog.show()
+    #havetoimplement
+    def workspace_changed(self, widget):
+        print("clf_folder changed")
+        print(widget.get_filename())
+        #reading json object
+        jsonFile = open('conf.json', 'r')
+        conf = json.load(jsonFile)
+        jsonFile.close()
+        #changing value
+        conf["workspace_dir"] = widget.get_filename()
+        #writing to file
+
+        jsonFile = open("conf.json", "w+")
+        jsonFile.write(json.dumps(conf))
+        jsonFile.close()
+
+    def clf_folder_changed(self, widget):
+        print("clf_folder changed")
+        print(widget.get_filename())
+        #reading json object
+        jsonFile = open('conf.json', 'r')
+        conf = json.load(jsonFile)
+        jsonFile.close()
+        #changing value
+        conf["clf_fold"] = widget.get_filename()
+        #writing to file
+
+        jsonFile = open("conf.json", "w+")
+        jsonFile.write(json.dumps(conf))
+        jsonFile.close()
+
+    def clf_path_changed(self, widget):
+        print("clf_path changed") 
+        print(widget.get_filename())
+        #reading json object
+        jsonFile = open('conf.json', 'r')
+        conf = json.load(jsonFile)
+        jsonFile.close()
+        #changing value
+        conf["clf_path"] = widget.get_filename()
+        #writing to file
+
+        jsonFile = open("conf.json", "w+")
+        jsonFile.write(json.dumps(conf))
+        jsonFile.close()
+
+    def closepreferencewindow(self, arg1, arg2):
+        preference_dialog = builder.get_object("preferencewindow")
+        preference_dialog.hide()
+        return True
     def on_about(self, widget):
         about_dialog = builder.get_object("about_window")
+        about_dialog.set_transient_for(window)
         about_dialog.show()
     
 
@@ -299,7 +373,8 @@ class Handler:
         about_dialog = builder.get_object("about_window")
         about_dialog.hide()
         return True
-
+    
+    
 
 
     def addimagebuttonclicked(self, widget):
@@ -385,7 +460,53 @@ class Handler:
         savechooser.destroy()
 
     def scan_button_clicked_cb(self, widget):
-        os.system("simple-scan")
+        #os.system("simple-scan")
+        pyinsane2.init()
+        try:
+            devices = pyinsane2.get_devices()
+            assert(len(devices) > 0)
+            device = devices[0]
+            print("I'm going to use the following scanner: %s" % (str(device)))
+
+            pyinsane2.set_scanner_opt(device, 'resolution', [300])
+
+        # Beware: Some scanners have "Lineart" or "Gray" as default mode
+        # better set the mode everytime
+            pyinsane2.set_scanner_opt(device, 'mode', ['Color'])
+
+        # Beware: by default, some scanners only scan part of the area
+        # they could scan.
+            pyinsane2.maximize_scan_area(device)
+
+            scan_session = device.scan(multiple=False)
+            try:
+                while True:
+                    scan_session.scan.read()
+            except EOFError:
+                pass
+            scannedimage = scan_session.images[-1]
+            
+            jsonFile = open('conf.json', 'r')
+            conf = json.load(jsonFile)
+            ws_dir = conf["workspace_dir"]
+            filename = ws_dir +"/" + str(datetime.datetime.now()) 
+            global imgloc
+            imgloc = filename
+            print(imgloc)
+            scannedimage.save(filename,"JPEG")
+            jsonFile.close()
+            textviewinitial = builder.get_object("outputtextview")
+            textviewinitial.get_buffer().set_text('')
+            img = builder.get_object("previmage")
+            img.set_from_file(imgloc)
+
+
+
+        finally:
+            pyinsane2.exit()
+
+
+
 
     def generate_button_clicked(self,widget):
         overalapchecker.clear()
@@ -435,6 +556,7 @@ class Handler:
 
 builder = Gtk.Builder()
 builder.add_from_file("ocrgeneratorui.glade")
+builder.add_from_file("settingswindow.glade")
 builder.connect_signals(Handler())
 
 

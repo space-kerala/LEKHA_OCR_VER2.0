@@ -23,7 +23,7 @@ from sklearn.preprocessing import normalize,Normalizer
 
 def lekha_run(im):
     conf = json.load(open('conf.json', 'r'))
-    image_path = conf['image_path']
+    #image_path = conf['image_path']
     clf_path =conf['clf_path']
     data=pd.read_pickle("data.pkl")
     X_sample = data.drop("target",axis=1)
