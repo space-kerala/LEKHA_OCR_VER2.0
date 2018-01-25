@@ -28,6 +28,10 @@ import lekha_work as ocr
 myendcordinates=[]
 overalapchecker=[]
 imgloc=0
+#labelset=0
+
+
+
 
 class ProgressBarWindow():
     def __init__(self):
@@ -374,6 +378,11 @@ class Handler:
         about_dialog.hide()
         return True
     
+    def error_message_box_close(self, arg1, arg2):
+        errprmessagewindow = builder.get_object("error_message_box")
+        errprmessagewindow.hide()
+        print("errorbox closing")
+        return True
     
 
 
@@ -464,43 +473,51 @@ class Handler:
         pyinsane2.init()
         try:
             devices = pyinsane2.get_devices()
-            assert(len(devices) > 0)
-            device = devices[0]
-            print("I'm going to use the following scanner: %s" % (str(device)))
+            if len(devices) > 0 :
+                assert(len(devices) > 0)
+                device = devices[0]
+                print("I'm going to use the following scanner: %s" % (str(device)))
 
-            pyinsane2.set_scanner_opt(device, 'resolution', [300])
+                pyinsane2.set_scanner_opt(device, 'resolution', [300])
 
-        # Beware: Some scanners have "Lineart" or "Gray" as default mode
-        # better set the mode everytime
-            pyinsane2.set_scanner_opt(device, 'mode', ['Color'])
+                # Beware: Some scanners have "Lineart" or "Gray" as default mode
+                # better set the mode everytime
+                pyinsane2.set_scanner_opt(device, 'mode', ['Color'])
 
-        # Beware: by default, some scanners only scan part of the area
-        # they could scan.
-            pyinsane2.maximize_scan_area(device)
+                # Beware: by default, some scanners only scan part of the area
+                # they could scan.
+                pyinsane2.maximize_scan_area(device)
 
-            scan_session = device.scan(multiple=False)
-            try:
-                while True:
-                    scan_session.scan.read()
-            except EOFError:
-                pass
-            scannedimage = scan_session.images[-1]
+                scan_session = device.scan(multiple=False)
+                try:
+                    while True:
+                        scan_session.scan.read()
+                except EOFError:
+                    pass
+                scannedimage = scan_session.images[-1]
+                
+                jsonFile = open('conf.json', 'r')
+                conf = json.load(jsonFile)
+                ws_dir = conf["workspace_dir"]
+                filename = ws_dir +"/" + str(datetime.datetime.now()) 
+                global imgloc
+                imgloc = filename
+                print(imgloc)
+                scannedimage.save(filename,"JPEG")
+                jsonFile.close()
+                textviewinitial = builder.get_object("outputtextview")
+                textviewinitial.get_buffer().set_text('')
+                img = builder.get_object("previmage")
+                img.set_from_file(imgloc)
+             
+            else:
+                print("no device detected")
+                errorwindow = builder.get_object("error_message_box")
+                errorwindow.set_transient_for(window)
+                errorwindow.set_markup("<b>No Scanner Detected...</b>")
+                errorwindow.format_secondary_markup("Ensure your scanner connected properly")
+                errorwindow.show()
             
-            jsonFile = open('conf.json', 'r')
-            conf = json.load(jsonFile)
-            ws_dir = conf["workspace_dir"]
-            filename = ws_dir +"/" + str(datetime.datetime.now()) 
-            global imgloc
-            imgloc = filename
-            print(imgloc)
-            scannedimage.save(filename,"JPEG")
-            jsonFile.close()
-            textviewinitial = builder.get_object("outputtextview")
-            textviewinitial.get_buffer().set_text('')
-            img = builder.get_object("previmage")
-            img.set_from_file(imgloc)
-
-
 
         finally:
             pyinsane2.exit()
@@ -509,8 +526,20 @@ class Handler:
 
 
     def generate_button_clicked(self,widget):
+        global labelset
         overalapchecker.clear()
         myendcordinates.clear()
+        print(imgloc)
+        if imgloc == 0 :
+            print ("imgloc is  0")
+            errorwindow = builder.get_object("error_message_box")
+            errorwindow.set_transient_for(window)
+            errorwindow.set_markup("<b>No Image loaded to the application</b>")
+            errorwindow.format_secondary_markup("Add or Scan image to start converting")
+            errorwindow.show()
+            return 0
+        
+            
         figureobject = LayoutAnalysedfigure()
         im = cv2.imread(imgloc,0)
         #a= sajhead.head(im)
@@ -557,6 +586,7 @@ class Handler:
 builder = Gtk.Builder()
 builder.add_from_file("ocrgeneratorui.glade")
 builder.add_from_file("settingswindow.glade")
+builder.add_from_file("errormessagewindow.glade")
 builder.connect_signals(Handler())
 
 
