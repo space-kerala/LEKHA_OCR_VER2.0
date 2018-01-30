@@ -16,6 +16,9 @@ from matplotlib.patches import Rectangle
 import matplotlib
 from matplotlib.widgets import Button
 import json
+#progressbar
+import time
+import progressbar
 #scanner
 import pyinsane2
 import datetime
@@ -24,10 +27,14 @@ import cv2
 import sajhead
 #ocr
 import lekha_work as ocr
+#skew
+#from alyn import Deskew
 
 myendcordinates=[]
 overalapchecker=[]
 imgloc=0
+skewcorrected = 0
+
 #labelset=0
 
 
@@ -409,6 +416,8 @@ class Handler:
 
             img = builder.get_object("previmage")
             img.set_from_file(imgloc)
+            global skewcorrected
+            skewcorrected = 0
             #sw.add(img)
 
 
@@ -509,6 +518,8 @@ class Handler:
                 textviewinitial.get_buffer().set_text('')
                 img = builder.get_object("previmage")
                 img.set_from_file(imgloc)
+                global skewcorrected
+                skewcorrected = 0
              
             else:
                 print("no device detected")
@@ -574,9 +585,45 @@ class Handler:
         plt.show() 
          
             
-
-
-        
+    def do_skew_correction(self,widget):
+        print("i am doing skew correction")        
+    '''
+        if imgloc == 0 :
+            print ("imgloc is  0")
+            errorwindow = builder.get_object("error_message_box")
+            errorwindow.set_transient_for(window)
+            errorwindow.set_markup("<b>No Image loaded to the application</b>")
+            errorwindow.format_secondary_markup("Add or Scan image to start skew correction")
+            errorwindow.show()
+            return 0
+        elif skewcorrected == 0 :     
+            print("i am doing skew correction")    
+            loc=imgloc
+            out=os.path.join(os.path.split(loc)[0],'skew'+os.path.splitext(os.path.split(loc)[1])[1])
+            im=cv2.imread('loc',0)
+            img= cv2.adaptiveThreshold(im,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY_INV,243,43)
+            cv2.imwrite(out,img)
+            d = Deskew(
+                input_file=out,
+                display_image=None,
+                output_file=out,
+                r_angle=0) 
+            d.run() 
+            global imgloc
+            imgloc = out
+            img = builder.get_object("previmage")
+            img.set_from_file(imgloc)
+            global skewcorrected
+            skewcorrected = 1
+        else:
+            print ("skewcorrected is  1")
+            errorwindow = builder.get_object("error_message_box")
+            errorwindow.set_transient_for(window)
+            errorwindow.set_markup("<b>Image already Skew Corrected</b>")
+            errorwindow.format_secondary_markup("Further correction may increase the skewness")
+            errorwindow.show()
+            return 0            
+    '''
    
    
  

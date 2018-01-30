@@ -111,22 +111,25 @@
               </object>
             </child>
             <child>
-              <object class="GtkMenuItem">
+              <object class="GtkMenuItem" id="image_factors">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">_Tools</property>
+                <property name="label" translatable="yes">_Image</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <object class="GtkImageMenuItem" id="engine">
-                        <property name="label">OCR engines</property>
+                      <object class="GtkImageMenuItem" id="skew_correction">
+                        <property name="label">Do Skew correction</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="right_justified">True</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
+                        <property name="use_stock">False</property>
+                        <property name="always_show_image">True</property>
+                        <signal name="activate" handler="do_skew_correction" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -191,7 +194,7 @@
                 <property name="can_focus">False</property>
                 <child>
                   <object class="GtkButton" id="scan_button">
-                    <property name="label" translatable="yes">scan</property>
+                    <property name="label" translatable="yes">Scan</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
@@ -204,7 +207,18 @@
                   </packing>
                 </child>
                 <child>
-                  <placeholder/>
+                  <object class="GtkButton" id="skew_correction_button">
+                    <property name="label" translatable="yes">Repair skew</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <signal name="clicked" handler="do_skew_correction" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
                 </child>
                 <child>
                   <placeholder/>
@@ -295,7 +309,7 @@
                       <object class="GtkImage" id="previmage">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="stock">gtk-missing-image</property>
+                        <property name="stock">gtk-dnd</property>
                       </object>
                     </child>
                   </object>
