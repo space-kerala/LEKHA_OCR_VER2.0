@@ -54,37 +54,5 @@ class Deskew:
             self.deskew()
 
 
-if __name__ == '__main__':
 
-    parser = optparse.OptionParser()
-
-    parser.add_option(
-        '-i',
-        '--input',
-        default=None,
-        dest='input_file',
-        help='Input file name')
-    parser.add_option(
-        '-d', '--display',
-        default=None,
-        dest='display_image',
-        help="display the rotated image")
-    parser.add_option(
-        '-o', '--output',
-        default=None,
-        dest='output_file',
-        help='Output file name')
-    parser.add_option(
-        '-r', '--rotate',
-        default=0,
-        dest='r_angle',
-        help='Rotate the image to desired axis',
-        type=int)
-    options, args = parser.parse_args()
-    deskew_obj = Deskew(
-        options.input_file,
-        options.display_image,
-        options.output_file,
-        options.r_angle)
-
-    deskew_obj.run()
+   

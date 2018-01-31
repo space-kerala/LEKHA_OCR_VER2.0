@@ -18,6 +18,7 @@ from matplotlib.widgets import Button
 import json
 #skew
 
+from deskew import Deskew
 #from alyn import Deskew
 #progressbar
 import time
@@ -588,7 +589,54 @@ class Handler:
          
             
     def do_skew_correction(self,widget):
-        print("i am doing skew correction")        
+        print("i am doing skew correction")
+        global imgloc
+        global skewcorrected
+        if imgloc == 0 :
+            print ("imgloc is  0")
+            errorwindow = builder.get_object("error_message_box")
+            errorwindow.set_transient_for(window)
+            errorwindow.set_markup("<b>No Image loaded to the application</b>")
+            errorwindow.format_secondary_markup("Add or Scan image to start skew correction")
+            errorwindow.show()
+
+
+        elif skewcorrected == 0 :
+            
+            loc = imgloc
+            print(loc)
+            out=os.path.join(os.path.split(loc)[0],'skewcorrected'+os.path.splitext(os.path.split(loc)[1])[0]+os.path.splitext(os.path.split(loc)[1])[1])
+            im=cv2.imread(loc,0)
+            img= cv2.adaptiveThreshold(im,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY_INV,243,43)
+            cv2.imwrite(out,img)
+            
+            d = Deskew(
+                   input_file=out,
+                   display_image=None,
+                   output_file=out,
+                   r_angle=0)
+            d.run()
+            
+            imgloc = out
+            print(imgloc)
+            img = builder.get_object("previmage")
+            img.set_from_file(imgloc)
+            skewcorrected = 1
+            successwindow = builder.get_object("error_message_box")
+            successwindow.set_transient_for(window)
+            successwindow.set_markup("<b>Skewness of the Image Corrected Successfully</b>")
+            successwindow.format_secondary_markup("You can now proceed Converting to text")
+            successwindow.show()
+
+        
+        else:
+            print ("skewcorrected is  1")
+            errorwindow = builder.get_object("error_message_box")
+            errorwindow.set_transient_for(window)
+            errorwindow.set_markup("<b>Image already Skew Corrected</b>")
+            errorwindow.format_secondary_markup("Further correction may increase the skewness")
+            errorwindow.show()
+
     '''
         if imgloc == 0 :
             print ("imgloc is  0")
