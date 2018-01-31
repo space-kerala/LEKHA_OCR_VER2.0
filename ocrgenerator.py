@@ -16,6 +16,9 @@ from matplotlib.patches import Rectangle
 import matplotlib
 from matplotlib.widgets import Button
 import json
+#skew
+
+#from alyn import Deskew
 #progressbar
 import time
 import progressbar
@@ -27,8 +30,7 @@ import cv2
 import sajhead
 #ocr
 import lekha_work as ocr
-#skew
-#from alyn import Deskew
+ 
 
 myendcordinates=[]
 overalapchecker=[]
@@ -641,7 +643,7 @@ builder.connect_signals(Handler())
 
 
 window = builder.get_object("main_window")
-window.set_icon_from_file('icon.png')
+window.set_icon_from_file('lekhablue.png')
 window.show_all()
 
 Gtk.main()
