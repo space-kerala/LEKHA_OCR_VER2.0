@@ -15,6 +15,7 @@ import sys
 from matplotlib.patches import Rectangle
 import matplotlib
 from matplotlib.widgets import Button
+import matplotlib.image as mpimg
 import json
 #skew
 
@@ -51,7 +52,8 @@ class ProgressBarWindow():
 
 class LayoutAnalysedfigure():
     def __init__(self):
-        self.fig = plt.figure()
+        self.fig = plt.figure(num='Layout Analysed Image')
+        #self.fig.suptitle("Layout Analysed figure")
         self.ax = self.fig.add_subplot(111)
         self.point = self.ax.plot([],[], marker="o", color="crimson")
         #clear button     
@@ -563,8 +565,10 @@ class Handler:
         imgep = builder.get_object("previmage")
         print(imgloc)
         #img = np.array(Image.open('/home/space-kerala/Downloads/test1.png'), dtype=np.uint8)
-        img = np.array(Image.open(imgloc), dtype=np.uint8)
         
+        #img = np.array(Image.open(imgloc), dtype=np.uint8)
+        #img = cv2.imread(imgloc,0)
+        img = mpimg.imread(imgloc)
         figureobject.ax.imshow(img, aspect = 'equal',extent = None)
 
         #print (a)
