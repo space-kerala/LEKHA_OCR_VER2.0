@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
+from gi.repository import GLib, Gtk, GObject
 import os
 #pickedrectangleselector
 import matplotlib.pyplot as plt
@@ -18,7 +18,6 @@ from matplotlib.widgets import Button
 import matplotlib.image as mpimg
 import json
 #skew
-
 from deskew import Deskew
 #from alyn import Deskew
 #progressbar
@@ -32,7 +31,10 @@ import cv2
 import sajhead
 #ocr
 import lekha_work as ocr
- 
+#threading
+import threading
+import time
+
 
 myendcordinates=[]
 overalapchecker=[]
@@ -44,11 +46,8 @@ skewcorrected = 0
 
 
 
-class ProgressBarWindow():
-    def __init__(self):
-        self.progresswindow = builder.get_object("progressbar_window")
-        self.progresswindow.set_transient_for(window)
-        self.progresswindow.show_all()
+
+        
 
 class LayoutAnalysedfigure():
     def __init__(self):
@@ -273,12 +272,24 @@ class LayoutAnalysedfigure():
         print(myendcordinates)
         for i, e in reversed(list(enumerate(self.rect))):
             print(i, e)
-    
-    def proceedtoocr(self,event):
-        #do cutting image and calling ocr one by one later
-        outputstring =''
-        plt.close('all')
-       # progressw =  ProgressBarWindow()    
+   
+    def update_progess(self,i):
+        self.progress = builder.get_object("ocr_progress")
+        self.curfraction = self.curfraction + self.incfactor
+        self.progress.set_fraction(self.curfraction)
+        text = "processing image block" + str(self.block)
+        self.progress.set_text(text)
+        if self.curfraction > 0.9:
+           progresswindow = builder.get_object("progressbar_window")
+           print("progressbar closed")
+           progresswindow.hide()
+        
+        return False
+
+    def ocrthread(self):    
+       # progressw =  ProgressBarWindow()
+        
+        outputstring =''   
         img = cv2.imread(imgloc,0)
         print(len(myendcordinates))
         for c in myendcordinates:
@@ -297,11 +308,36 @@ class LayoutAnalysedfigure():
             strtext = str(text)
             outputstring = outputstring + "\n" + strtext
             #print(strtext)
+            GLib.idle_add(self.update_progess,0)
+            self.block = self.block +1
         textview = builder.get_object("outputtextview")
         textview.get_buffer().set_text(outputstring)
         f = open('test.txt', 'w')
         f.write(outputstring)
         f.close()
+
+    def proceedtoocr(self,event):
+        #do cutting image and calling ocr one by one later
+        plt.close('all')
+        self.p = len(myendcordinates)
+        print("length of myendcordinates(ocr) = %d" %(self.p))
+        self.incfactor = 1/(self.p)
+        print(self.incfactor)
+        self.curfraction =0
+        self.block = 1
+        self.progress = builder.get_object("ocr_progress")
+        self.progress.set_fraction(0) 
+        self.progress.set_text("Processing image block 1")
+        GObject.threads_init()
+        thread = threading.Thread(target=self.ocrthread)
+        thread.daemon = True
+        thread.start()
+        self.progresswindow = builder.get_object("progressbar_window")
+        
+        #self.progresswindow.set_transient_for(window)
+        self.progresswindow.show_all()
+
+    
 
 
 
@@ -396,6 +432,11 @@ class Handler:
         print("errorbox closing")
         return True
     
+    def on_progresswindow_close(self, arg1, arg2):
+        progresswindow = builder.get_object("progressbar_window")
+        print("progressbar closed")
+        progresswindow.hide()
+        return True
 
 
     def addimagebuttonclicked(self, widget):
@@ -641,43 +682,7 @@ class Handler:
             errorwindow.format_secondary_markup("Further correction may increase the skewness")
             errorwindow.show()
 
-    '''
-        if imgloc == 0 :
-            print ("imgloc is  0")
-            errorwindow = builder.get_object("error_message_box")
-            errorwindow.set_transient_for(window)
-            errorwindow.set_markup("<b>No Image loaded to the application</b>")
-            errorwindow.format_secondary_markup("Add or Scan image to start skew correction")
-            errorwindow.show()
-            return 0
-        elif skewcorrected == 0 :     
-            print("i am doing skew correction")    
-            loc=imgloc
-            out=os.path.join(os.path.split(loc)[0],'skew'+os.path.splitext(os.path.split(loc)[1])[1])
-            im=cv2.imread('loc',0)
-            img= cv2.adaptiveThreshold(im,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY_INV,243,43)
-            cv2.imwrite(out,img)
-            d = Deskew(
-                input_file=out,
-                display_image=None,
-                output_file=out,
-                r_angle=0) 
-            d.run() 
-            global imgloc
-            imgloc = out
-            img = builder.get_object("previmage")
-            img.set_from_file(imgloc)
-            global skewcorrected
-            skewcorrected = 1
-        else:
-            print ("skewcorrected is  1")
-            errorwindow = builder.get_object("error_message_box")
-            errorwindow.set_transient_for(window)
-            errorwindow.set_markup("<b>Image already Skew Corrected</b>")
-            errorwindow.format_secondary_markup("Further correction may increase the skewness")
-            errorwindow.show()
-            return 0            
-    '''
+    
    
    
  
