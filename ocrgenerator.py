@@ -44,10 +44,51 @@ skewcorrected = 0
 #labelset=0
 
 
-
-
-
+class Cropfigure():
+    def __init__(self):
+        self.cropfig = plt.figure(num='Crop Image')
+        #self.fig.suptitle("Layout Analysed figure")
+        self.cropax = self.cropfig.add_subplot(111)
+        self.croppoint = self.cropax.plot([],[], marker="o", color="crimson")
         
+        self.axcrop = plt.axes([0.4, 0.01, 0.09,0.06])
+        self.bncrop = Button(self.axcrop, 'Crop')
+        self.bncrop.color = "white"
+        self.img = 0
+        self.cropx1 = 0
+        self.cropy1 = 0
+        self.cropx2 = 0
+        self.cropy2 = 0
+        self.cr = RectangleSelector(self.cropax,self.crop_select,
+                       drawtype='box', useblit=False, button=[1], 
+                       minspanx=2, minspany=2, spancoords='pixels', 
+                       interactive=True)      
+
+    def cropimagebyselection(self,event):
+        global imgloc
+        x = int(self.cropx1)
+        y = int(self.cropy1)
+        h = int(self.cropy2 - self.cropy1)
+        w = int(self.cropx2 - self.cropx1)
+        croppedimage = self.img[y:y+h, x:x+w]
+        
+        loc = imgloc
+        print(loc)
+        fullfilepath=os.path.join(os.path.split(loc)[0],'cropped'+os.path.splitext(os.path.split(loc)[1])[0]+os.path.splitext(os.path.split(loc)[1])[1])
+        cv2.imwrite(fullfilepath,croppedimage)
+        imgloc =fullfilepath
+        img = builder.get_object("previmage")
+        img.set_from_file(imgloc)
+
+        plt.close('all')
+
+    def crop_select(self,eclick, erelease):
+        self.cropx1, self.cropy1 = eclick.xdata, eclick.ydata
+        self.cropx2, self.cropy2 = erelease.xdata, erelease.ydata
+        print(self.cropx1,self.cropy1,self.cropx2,self.cropy2 )
+        self.bncrop.on_clicked(self.cropimagebyselection)
+        #croutside = self.fig.canvas.mpl_connect('button_press_event', lambda event: self.cropselectoroutsideclick(event,cid))
+                
 
 class LayoutAnalysedfigure():
     def __init__(self):
@@ -325,6 +366,8 @@ class LayoutAnalysedfigure():
         print(self.incfactor)
         self.curfraction =0
         self.block = 1
+        self.progresswindow = builder.get_object("progressbar_window")
+        self.progresswindow.set_title("Ocr Status")
         self.progress = builder.get_object("ocr_progress")
         self.progress.set_fraction(0) 
         self.progress.set_text("Processing image block 1")
@@ -522,9 +565,29 @@ class Handler:
             print("Cancel clicked") 
         
         savechooser.destroy()
+    
+    def updatescanprogress(self):
+        self.scanfraction =self.scanfraction + 0.001842
+        self.progress.set_fraction(self.scanfraction)
+    
+    def nodeviceconnected(self):
+        errorwindow = builder.get_object("error_message_box")
+        errorwindow.set_transient_for(window)
+        errorwindow.set_markup("<b>No Scanner Detected...</b>")
+        errorwindow.format_secondary_markup("Ensure your scanner connected properly")
+        errorwindow.show() 
+        self.progresswindow = builder.get_object("progressbar_window")
+        #self.progresswindow.set_transient_for(window)
+        self.progresswindow.hide()       
+          
+    def showprogressbar(self):
+        self.progresswindow.show_all() 
 
-    def scan_button_clicked_cb(self, widget):
-        #os.system("simple-scan")
+    def closescanprogress(self):
+        self.progresswindow.hide() 
+
+    def scanthread(self):  
+        self.countread =0  
         pyinsane2.init()
         try:
             devices = pyinsane2.get_devices()
@@ -532,7 +595,7 @@ class Handler:
                 assert(len(devices) > 0)
                 device = devices[0]
                 print("I'm going to use the following scanner: %s" % (str(device)))
-
+                GLib.idle_add(self.showprogressbar)
                 pyinsane2.set_scanner_opt(device, 'resolution', [300])
 
                 # Beware: Some scanners have "Lineart" or "Gray" as default mode
@@ -547,10 +610,13 @@ class Handler:
                 try:
                     while True:
                         scan_session.scan.read()
+                        GLib.idle_add(self.updatescanprogress)
+                        #self.countread = self.countread + 1
+                        #print(self.countread)
                 except EOFError:
                     pass
                 scannedimage = scan_session.images[-1]
-                
+                GLib.idle_add(self.closescanprogress)
                 jsonFile = open('conf.json', 'r')
                 conf = json.load(jsonFile)
                 ws_dir = conf["workspace_dir"]
@@ -569,15 +635,34 @@ class Handler:
              
             else:
                 print("no device detected")
-                errorwindow = builder.get_object("error_message_box")
-                errorwindow.set_transient_for(window)
-                errorwindow.set_markup("<b>No Scanner Detected...</b>")
-                errorwindow.format_secondary_markup("Ensure your scanner connected properly")
-                errorwindow.show()
+                GLib.idle_add(self.nodeviceconnected)
+                
             
 
         finally:
-            pyinsane2.exit()
+            pyinsane2.exit()        
+    def scan_button_clicked_cb(self, widget):
+        #os.system("simple-scan")
+        GObject.threads_init()
+        sthread = threading.Thread(target=self.scanthread)
+        sthread.daemon = True
+        sthread.start()
+        self.progresswindow = builder.get_object("progressbar_window")
+        #self.progresswindow.set_transient_for(window)
+        self.progresswindow.set_title("Scan Status")
+        self.scanfraction =0
+        self.progress = builder.get_object("ocr_progress")
+        self.progress.set_fraction(0) 
+        self.progress.set_text("Scanning in progress")
+       
+              
+                
+
+             
+            
+            
+
+        
 
 
 
@@ -682,10 +767,21 @@ class Handler:
             errorwindow.format_secondary_markup("Further correction may increase the skewness")
             errorwindow.show()
 
-    
-   
-   
+    def crop_button_clicked(self,widget):
+        if imgloc == 0 :
+            print ("imgloc is  0")
+            errorwindow = builder.get_object("error_message_box")
+            errorwindow.set_transient_for(window)
+            errorwindow.set_markup("<b>No Image loaded to the application</b>")
+            errorwindow.format_secondary_markup("Add or Scan image to Crop")
+            errorwindow.show()
+        else:
+            cropobj =   Cropfigure()  
+            
  
+            cropobj.img = mpimg.imread(imgloc)
+            cropobj.cropax.imshow(cropobj.img, aspect = 'equal',extent = None)
+            plt.show()
 
 
 
