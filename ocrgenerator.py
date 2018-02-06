@@ -668,9 +668,27 @@ class Handler:
 
 
     def generate_button_clicked(self,widget):
-        global labelset
+        
         overalapchecker.clear()
         myendcordinates.clear()
+        jsonFile = open('conf.json', 'r')
+        conf = json.load(jsonFile)
+        clfpath = conf["clf_path"]
+        #print(clfpath)
+        jsonFile.close()
+        clfpathfilename =os.path.basename(clfpath)
+        print(clfpathfilename)
+        clfname = "_.lekha"
+        if clfname != clfpathfilename:
+            print("not same")
+            errorwindow = builder.get_object("error_message_box")
+            errorwindow.set_transient_for(window)
+            errorwindow.set_markup("<b>Classifier file path is incorrect in the preference</b>")
+            errorwindow.format_secondary_markup("point it to _.lekha file under C140_1 folder")
+            errorwindow.show()
+            return 0
+                 
+        #print(clpathfilename)
         print(imgloc)
         if imgloc == 0 :
             print ("imgloc is  0")
@@ -782,7 +800,45 @@ class Handler:
             cropobj.img = mpimg.imread(imgloc)
             cropobj.cropax.imshow(cropobj.img, aspect = 'equal',extent = None)
             plt.show()
+    
+    def rotate_image_90(self,widget):
+        global imgloc
+        if imgloc == 0:
+            errorwindow = builder.get_object("error_message_box")
+            errorwindow.set_transient_for(window)
+            errorwindow.set_markup("<b>No Image loaded to the application</b>")
+            errorwindow.format_secondary_markup("Add or Scan image to Rotate")
+            errorwindow.show()
+            return 0   
+        else:
+            print("rotate image 90")
+            img = Image.open(imgloc)
+            img90_rotated = img.rotate(90,expand=True)
+            out=out=os.path.join(os.path.split(imgloc)[0],'rotatedimage'+os.path.splitext(os.path.split(imgloc)[1])[1])
+            img90_rotated.save(out)
+            imgloc = out
+            img = builder.get_object("previmage")
+            img.set_from_file(imgloc)       
 
+    def rotate_image_180(self,widget):
+        global imgloc
+        if imgloc == 0:
+            errorwindow = builder.get_object("error_message_box")
+            errorwindow.set_transient_for(window)
+            errorwindow.set_markup("<b>No Image loaded to the application</b>")
+            errorwindow.format_secondary_markup("Add or Scan image to Rotate")
+            errorwindow.show()
+            return 0   
+        else:
+            print("rotate image 180")
+            
+            img = Image.open(imgloc)
+            img180_rotated = img.rotate(180,expand=True)
+            out=out=os.path.join(os.path.split(imgloc)[0],'rotatedimage'+os.path.splitext(os.path.split(imgloc)[1])[1])
+            img180_rotated.save(out)
+            imgloc = out
+            img = builder.get_object("previmage")
+            img.set_from_file(imgloc)
 
 
 builder = Gtk.Builder()
