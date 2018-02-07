@@ -2,6 +2,7 @@
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import GLib, Gtk, GObject
+from gi.repository.GdkPixbuf import Pixbuf, InterpType
 import os
 #pickedrectangleselector
 import matplotlib.pyplot as plt
@@ -40,7 +41,7 @@ myendcordinates=[]
 overalapchecker=[]
 imgloc=0
 skewcorrected = 0
-
+zoomout=1
 #labelset=0
 
 
@@ -66,6 +67,7 @@ class Cropfigure():
 
     def cropimagebyselection(self,event):
         global imgloc
+
         x = int(self.cropx1)
         y = int(self.cropy1)
         h = int(self.cropy2 - self.cropy1)
@@ -79,7 +81,8 @@ class Cropfigure():
         imgloc =fullfilepath
         img = builder.get_object("previmage")
         img.set_from_file(imgloc)
-
+        global zoomout
+        zoomout =1
         plt.close('all')
 
     def crop_select(self,eclick, erelease):
@@ -507,6 +510,8 @@ class Handler:
             img.set_from_file(imgloc)
             global skewcorrected
             skewcorrected = 0
+            global zoomout
+            zoomout = 1
             #sw.add(img)
 
 
@@ -632,6 +637,8 @@ class Handler:
                 img.set_from_file(imgloc)
                 global skewcorrected
                 skewcorrected = 0
+                global zoomout
+                zoomout = 1
              
             else:
                 print("no device detected")
@@ -735,7 +742,54 @@ class Handler:
         figureobject.bnproceed.on_clicked(figureobject.proceedtoocr)
         plt.show() 
          
-            
+    
+    def fit_image_window(self,widget):
+        print("fit image to window")
+        global imgloc
+        
+        global zoomout
+        if imgloc == 0 :
+            print ("imgloc is  0")
+            errorwindow = builder.get_object("error_message_box")
+            errorwindow.set_transient_for(window)
+            errorwindow.set_markup("<b>No Image loaded to the application</b>")
+            errorwindow.format_secondary_markup("Add or Scan image to start scaling")
+            errorwindow.show()
+            return 0
+        elif zoomout <3:
+            pixbuf = Pixbuf.new_from_file(imgloc)
+            height = pixbuf.get_height()
+            width = pixbuf.get_width()
+            print(height)
+            zoomout = zoomout + 1
+            pixbuf = pixbuf.scale_simple(width/zoomout,height/zoomout, InterpType.BILINEAR)
+            img = builder.get_object("previmage")
+            img.set_from_pixbuf(pixbuf)
+        else :
+            errorwindow = builder.get_object("error_message_box")
+            errorwindow.set_transient_for(window)
+            errorwindow.set_markup("<b>Zoom out maximum level reached</b>")
+            errorwindow.format_secondary_markup("only 2 level of zoom out is available")
+            errorwindow.show()
+            return 0        
+    
+    def original_image_size(self,widget):
+        print("fit image to window")
+        global imgloc
+        global zoomout
+        if imgloc == 0 :
+            print ("imgloc is  0")
+            errorwindow = builder.get_object("error_message_box")
+            errorwindow.set_transient_for(window)
+            errorwindow.set_markup("<b>No Image loaded to the application</b>")
+            errorwindow.format_secondary_markup("Add or Scan image to start scaling")
+            errorwindow.show()
+            return 0 
+
+        img = builder.get_object("previmage")
+        img.set_from_file(imgloc)
+        zoomout =1     
+
     def do_skew_correction(self,widget):
         print("i am doing skew correction")
         global imgloc
@@ -775,6 +829,8 @@ class Handler:
             successwindow.set_markup("<b>Skewness of the Image Corrected Successfully</b>")
             successwindow.format_secondary_markup("You can now proceed Converting to text")
             successwindow.show()
+            global zoomout
+            zoomout =1
 
         
         else:
@@ -818,7 +874,9 @@ class Handler:
             img90_rotated.save(out)
             imgloc = out
             img = builder.get_object("previmage")
-            img.set_from_file(imgloc)       
+            img.set_from_file(imgloc)  
+            global zoomout
+            zoomout =1     
 
     def rotate_image_180(self,widget):
         global imgloc
@@ -839,12 +897,14 @@ class Handler:
             imgloc = out
             img = builder.get_object("previmage")
             img.set_from_file(imgloc)
+            global zoomout
+            zoomout =1
 
 
 builder = Gtk.Builder()
-builder.add_from_file("ocrgeneratorui.glade")
-builder.add_from_file("settingswindow.glade")
-builder.add_from_file("errormessagewindow.glade")
+builder.add_from_file("frontend/ocrgeneratorui.glade")
+builder.add_from_file("frontend/settingswindow.glade")
+builder.add_from_file("frontend/errormessagewindow.glade")
 builder.connect_signals(Handler())
 
 
@@ -852,7 +912,7 @@ builder.connect_signals(Handler())
 
 
 window = builder.get_object("main_window")
-window.set_icon_from_file('lekhablue.png')
+window.set_icon_from_file('lekha2logo.png')
 window.show_all()
 
 Gtk.main()
