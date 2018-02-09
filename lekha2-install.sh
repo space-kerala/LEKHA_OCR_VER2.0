@@ -1,6 +1,7 @@
 #sudo rm $HOME/.local/share/applications/lekha_ocr_ver2.desktop
 sudo apt-get install -y python3.5
 sudo apt-get install -y python3-matplotlib
+sudo apt-get install -y python3-pip
 sudo rm -rf /usr/local/lib/python3.5/dist-packages/lekha_ocr
 sudo rm -rf /usr/local/lib/python3.5/dist-packages/lekha_ocr-2.0-py3.5.egg-info/
 sudo pkg-config --modversion opencv | grep '3' &> /dev/null
@@ -68,13 +69,14 @@ if [ $? != 0 ]; then
    make -j4
    sudo make install
    sudo ldconfig
-
-
+   sudo rm -rf /OPENCV
+   
    # 4. EXECUTE SOME OPENCV EXAMPLES AND COMPILE A DEMONSTRATION
 
    # To complete this step, please visit 'http://milq.github.io/install-opencv-ubuntu-debian'.
 
    #end of install-opencv.sh
 fi
+
 sudo pip3 install .
-sudo cp -f lekha_ocr_ver2.desktop $HOME/.local/share/applications
+sudo cp -f lekha_ocr_ver2.desktop /usr/share/applications
