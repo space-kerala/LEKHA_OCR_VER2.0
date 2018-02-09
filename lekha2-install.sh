@@ -1,4 +1,5 @@
 #sudo rm $HOME/.local/share/applications/lekha_ocr_ver2.desktop
+umask 022
 sudo apt-get install -y python3.5
 sudo apt-get install -y python3-matplotlib
 sudo apt-get install -y python3-pip
@@ -77,6 +78,6 @@ if [ $? != 0 ]; then
 
    #end of install-opencv.sh
 fi
-
+umask 022
 sudo pip3 install .
-sudo cp -f lekha_ocr_ver2.desktop $HOME/.local/share/applications/
+sudo cp -f lekha_ocr_ver2.desktop /usr/share/applications/
