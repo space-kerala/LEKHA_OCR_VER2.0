@@ -1,173 +1,179 @@
 
 # coding: utf-8
 
-# In[25]:
+# In[1]:
 
 
 import warnings
 warnings.filterwarnings('ignore')
-import pandas as pd
-import cv2
 import json
+import cv2
+import math
 import numpy as np
-from collections import namedtuple
 from sklearn import svm
 from sklearn.externals import joblib
-from math import atan2, degrees, pi
 import features
 import make_word_original
 from sklearn.preprocessing import normalize,Normalizer
+from matplotlib import pyplot as plt
+import pandas as pd
 
 
-# In[26]:
+# In[2]:
+
+
+#get_ipython().magic(u'matplotlib')
+def plot(string='',*images):
+    ncols=2
+    nrows=int(math.ceil(len(images)/2.0))
+    fig, ax = plt.subplots(nrows, ncols,gridspec_kw = {'wspace':0, 'hspace':0},facecolor='.5')
+    plt.axis('off')
+    for i in range(0,len(images)):
+        plt.subplot(nrows,ncols,i+1),plt.imshow(images[i],cmap='gray')
+        plt.text(0,0,string+'\n')
+        plt.axis('off')
+    plt.show()
+
+
+# In[3]:
+
+
+def cv_plot(img):
+    cv2.imshow('image',img)
+    cv2.waitKey(0)
+    cv2.destroyWindow('image')
+
+
+# In[4]:
+
+
+def takecenteroid(cnt):
+    M = cv2.moments(cnt)
+    cX = int(M["m10"] / M["m00"])
+    return int(cX)
+
+
+# In[5]:
+
 
 def lekha_run(im):
     conf = json.load(open('conf.json', 'r'))
     #image_path = conf['image_path']
     clf_path =conf['clf_path']
-    data=pd.read_pickle("data.pkl")
-    X_sample = data.drop("target",axis=1)
-    X_sample_n = Normalizer().fit(X_sample)
-
-
-    #im = cv2.imread(image_path,0)
-    img= cv2.adaptiveThreshold(im,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY_INV,243,43)
-    classifier = joblib.load(clf_path)
-    MyStruct = namedtuple('MyStruct', 'line_no line_start line_end bowl_start bowl_end word_no char_pos x1 y1 wi hi label')
-    NodeDb = []
-    height,width=img.shape
-    sump=np.zeros(height)
-    sumvp=np.zeros(width)
+    data_path=conf['data_save_path']
     string=' '
 
-    hor_pix_den=[0 for i in range(0,height)]
-    for i in range(0,height):
-        for j in range(0,width):
-            sump[i]=sump[i]+img[i][j]
-        sump[i]/=255
-        if sump[i]<9:
-            sump[i]=0
-    noise =8
-    fin=0
-    lineno=0
-    start=0
+    data=pd.read_pickle(data_path)
+    X_sample,Y_label = data.drop("target",axis=1),data.target
+    X_sample_n = Normalizer().fit(X_sample)
+    classifier = joblib.load(clf_path)
 
-    for i in range (2,height):
-        if(sump[i]>noise and sump[i-1]<(noise) and (sump[i-2]<noise)):
-            if(fin==0):
-                fin=1
-                start = i
-        elif(fin==1 and (i+2)<height and (sump[i+1]<noise and sump[i+2]<noise) and (i-start)>13) :
-            fin=0
-            end=i
-            wordno=0
-            l1=0
-            l2=0
-            precount=0
-            for f in range(start,end):  
-                k=np.absolute(precount-sump[f])
-                if ((sump[f]>precount) and k>l1):
-                    l1=k
-                    b1=f
-                elif((precount>sump[f]) and k>l2):
-                    l2=k
-                    b2=f
-                precount=sump[f]
-            Node = MyStruct(line_no=lineno,line_start=start,line_end=end,bowl_start=b1,bowl_end=b2,word_no=None,char_pos=None,x1 =None,y1 =None,wi =None,hi =None,label=None)
-            lineno+=1
+    #im=cv2.imread(image_path,0)
+    image_h,image_w=im.shape
 
-            #cv2.imshow('window',img[start:i,0:width])
-            #cv2.waitKey(0)
-            startw=0
-            fin1=0
-            word_space=(end-start)/5
-            for p in range(0,width):
-                for q in range(start,end):
-                    sumvp[p]=sumvp[p]+img[q][p]
-                sumvp[p]=int(sumvp[p]/255)
-                if sumvp[p]<=2:
-                    sumvp[p]=0
-                #print sumvp[p]
+    # scaned documents contain glyp impressions of other side
+   
+        
+    
+    img= cv2.adaptiveThreshold(im,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY_INV,243,50)
+    #kernel to join along horizontal 
+    kernel_line = np.array([[0,0,0,0,0],[0,0,0,0,0],[1,1,1,1,1],[0,0,0,0,0],[0,0,0,0,0]],np.uint8)
+    dilation = cv2.dilate(img,kernel_line,iterations = 6)
+    #plot("sds",dilation)
 
-            for p in range(0,width-8):
-                arr=np.array(sumvp[p-10:p])
-                arr1=np.array(sumvp[p:p+10])
-                #print arr
-                if (fin1==0 and  np.count_nonzero(arr)<=1 and np.count_nonzero(arr1)>=7):
-                    startw=p
-                    #cv2.line(im,(startw,start),(startw,end),(0,0,0),2)
-                    fin1=1
-                elif(fin1==1 and p-startw>=40 and np.count_nonzero(arr)>=7 and np.count_nonzero(arr1)<=1):
-                    Node=Node._replace(word_no=wordno)
-                    wordno+=1
-                    endw=p
-                    #cv2.line(im,(startw,start),(startw,end),(0,0,0),2)
-                    fin1=0
-                    #cv2.line(im,(endw,start),(endw,end),(0,0,0),2)
-                    t=img[start:end,startw:endw].copy()
-                    _,contours2, hierarchy = cv2.findContours(t.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
-                    if(len(contours2)==0):
-                        print ('no line')
-                    contours = []
-                    for cnt in contours2:
-                        if(cv2.contourArea(cnt)>6):
-                            try:
-                                contours.append(cnt)
-                            except ValueError:
-                                print ('error')
-                                pass
-                    Mset = [cv2.moments(cnt) for cnt in contours]
-                    X = [int(M['m10']/M['m00']) for M in Mset]
-                    index = [i for i in range(0,len(contours2))]
-                    try:
-                        X,index = zip(*sorted(zip(X,index)))
-                    except:
-                        h=1
-                    char_list=[]
+    im, contours, hierarchy = cv2.findContours(dilation.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    avg_height_arr=[]
 
-                    cn=1
-                    for i in index:
-                        cnt = contours[i]
-                        x,y,w,h=cv2.boundingRect(cnt)
-                        Node= Node._replace(char_pos=i)
-                        Node= Node._replace(x1=x)
-                        Node= Node._replace(y1=y)
-                        Node= Node._replace(wi=w)
-                        Node= Node._replace(hi=h)
-                        char=t[y-1:y+h+1,x-1:x+w+1]
-                        #cv2.imshow('char',char)
-                        #cv2.waitKey(0)
-                        up_diff=Node.bowl_start-Node.line_start
-                        bw_diff=Node.bowl_end-Node.line_start
-                        g_height=Node.y1+Node.hi
-                        arr=np.zeros(4)
-                        if(Node.y1<(up_diff-6)):
-                            arr[0]=1
-                        if(Node.y1<bw_diff+3 and (g_height)>(up_diff+(Node.bowl_end-Node.bowl_start)/2)):
-                            arr[1]=1
-                        if((g_height)>(bw_diff+4)):
-                            arr[2]=1
-                        if(Node.y1<(up_diff+3) and g_height>(bw_diff-4)):
-                            arr[3]=1
-                        #print arr
-                        char_feature=np.array(features.HOG(char.copy()))
-                        char_feature=X_sample_n.transform(char_feature.reshape(1,-1))
-                        #char_feature1=np.array(char_feature +arr)
-                        letter=classifier.predict(char_feature)
+    for cnt in contours:
+        x,y,w,h= cv2.boundingRect(cnt)
+        if w*h > 1000:
+            avg_height_arr.append(h)
+
+    #detect average height of a line in document which should include punctuations
+
+    #avg_height=np.mean(sorted(avg_height_arr,reverse=True)[2:9])
+    #print(avg_height)
+    if len(avg_height_arr)<9:
+        avg_height=np.mean(sorted(avg_height_arr,reverse=True))
+    else:
+        avg_height=np.mean(sorted(avg_height_arr,reverse=True)[2:9])
+    # wordarea , minimum of 2 letters 
+
+    word_area=(avg_height*avg_height)/1.8
+
+    kernel_chandrakala = np.array([[0,0,1,1,1],[0,0,1,1,0],[1,1,1,1,1],[0,0,0,0,0],[0,0,0,0,0]],np.uint8)
+    ker_width=kernel_chandrakala.shape[1]/2
+
+    iteration=int(math.ceil((avg_height/(1.5*ker_width))))
+    dilation = cv2.dilate(dilation,kernel_line,iterations = (iteration-5))
+    #plot('lines',dilation)
+
+    line_boxes=[]
+    im, contours, hierarchy = cv2.findContours(dilation.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    for cnt in contours:
+
+        x,y,w,h= cv2.boundingRect(cnt)
+
+        if (h > (avg_height/1.7)) & (w>(avg_height+(ker_width*iteration*2))):
+
+            line_boxes.append([x,y,image_w,y+h])
+
+    line_boxes=sorted(line_boxes,key=lambda box: box[1])
+
+    if len(line_boxes)==0:
+        print ("no lines found")
+
+    kernel_word = np.array([[1,1,1],[1,1,1],[1,1,1],[0,0,0],[0,0,0]],np.uint8)
 
 
-                        #print letter[0],"  ",arr
-                        #.encode('utf-8')
-                        Node=Node._replace(label=letter[0].decode('utf-8'))
-                        NodeDb.append(Node)
-                        char_list.append(letter[0])
-                        #print char_list
-                    string=string+make_word_original.form_word(char_list)
-                    string=string+' '
-            string=string+'\n'
+    for box in line_boxes:
+
+        line_image= img[box[1]:box[3],box[0]:box[2]]
+        word_dilate= cv2.dilate(line_image,kernel_word,iterations = int(avg_height/10))
+        w_h,w_w=word_dilate.shape
+        #cv_plot(line_image)
+
+        im_w, contours_w, hierarchy_w = cv2.findContours(word_dilate.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        word_boxes=[]
+
+        for cnt in contours_w:
+            x,y,w,h= cv2.boundingRect(cnt)
+            if h >= (w_h/2):
+                w_area=cv2.contourArea(cnt)
+                if w_area>word_area:
+                    word_boxes.append([x,0,x+w,w_h])
+
+        if len(word_boxes)==0:
+            continue
+        word_boxes=sorted(word_boxes,key=lambda w_box: w_box[0])  
+
+        for w_box in word_boxes:
+            word_cut=line_image[w_box[1]:w_box[3],w_box[0]:w_box[2]]
+            im_le, contours_le, hierarchy_we = cv2.findContours(word_cut.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            letters=sorted([cnt for cnt in contours_le if (cv2.contourArea(cnt)>10)],key=takecenteroid)
+
+            char_list=[]
+            for letter in letters:
+                x_le,y_le,w_le,h_le=cv2.boundingRect(letter)
+                #print w_le,h_le
+                char=word_cut[y_le:y_le+h_le,x_le:x_le+w_le] 
+                char_feature=np.array(features.HOG(char.copy()))
+                char_feature=char_feature.reshape(1,-1)
+                char_feature=X_sample_n.transform(char_feature)
+
+                predicted_letter=classifier.predict(char_feature)
+                if predicted_letter[0]=='ഠ' or predicted_letter[0]=='ം':
+                    if h_le < avg_height/2:
+                        predicted_letter[0]='ം'
+                    else:
+                        predicted_letter[0]='ഠ'
+                char_list.append(predicted_letter[0])
+                #cv_plot(char)
+
+            #print char_list
+            string=string+make_word_original.form_word(char_list)
+            string=string+' '
+        string=string+'\n'
     return string
-    #f = open('test', 'w')
-    #f.write(string.encode('utf8'))
-    #f.close()
-
 

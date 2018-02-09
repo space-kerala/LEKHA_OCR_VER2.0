@@ -536,6 +536,7 @@ Yadhukrishnan Sp
     <property name="resizable">False</property>
     <property name="window_position">center-always</property>
     <property name="type_hint">dialog</property>
+    <property name="skip_taskbar_hint">True</property>
     <signal name="delete-event" handler="on_progresswindow_close" swapped="no"/>
     <child>
       <object class="GtkBox">
@@ -544,18 +545,16 @@ Yadhukrishnan Sp
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkProgressBar" id="ocr_progress">
-            <property name="name">GtkProgressBar</property>
+            <property name="name">myprogressbar</property>
+            <property name="height_request">50</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="text" translatable="yes">Processing  image block 1</property>
             <property name="show_text">True</property>
-            <style>
-              <class name="GtkProgressBar:min-height:20px;"/>
-            </style>
           </object>
           <packing>
             <property name="expand">False</property>
-            <property name="fill">False</property>
+            <property name="fill">True</property>
             <property name="position">0</property>
           </packing>
         </child>

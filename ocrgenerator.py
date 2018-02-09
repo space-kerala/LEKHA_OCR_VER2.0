@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import GLib, Gtk, GObject
+from gi.repository import GLib, Gtk, Gdk, GObject,Pango
 from gi.repository.GdkPixbuf import Pixbuf, InterpType
 import os
 #pickedrectangleselector
@@ -29,7 +29,8 @@ import pyinsane2
 import datetime
 #layoutanalyser
 import cv2
-import sajhead
+import layoutanalyzer
+from scipy.stats import mode
 #ocr
 import lekha_work as ocr
 #threading
@@ -84,6 +85,7 @@ class Cropfigure():
         global zoomout
         zoomout =1
         plt.close('all')
+    
 
     def crop_select(self,eclick, erelease):
         self.cropx1, self.cropy1 = eclick.xdata, eclick.ydata
@@ -119,6 +121,8 @@ class LayoutAnalysedfigure():
         self.usg2 = plt.figtext(0.3, 0.93, 'CLICK ON THE DRAWN RECTANGLES TO DELETE IT')
         self.usg2.set_color('brown')
         self.usg2.set_weight('bold')
+        
+        
 
         self.rect = [] 
         self.rs = RectangleSelector(self.ax,self.line_select_callback,
@@ -333,6 +337,7 @@ class LayoutAnalysedfigure():
     def ocrthread(self):    
        # progressw =  ProgressBarWindow()
         
+        
         outputstring =''   
         img = cv2.imread(imgloc,0)
         print(len(myendcordinates))
@@ -356,6 +361,8 @@ class LayoutAnalysedfigure():
             self.block = self.block +1
         textview = builder.get_object("outputtextview")
         textview.get_buffer().set_text(outputstring)
+        textbuffer =textview.get_buffer()
+        textview.get_buffer().apply_tag(styletag,textbuffer.get_start_iter(),textbuffer.get_end_iter())
         f = open('test.txt', 'w')
         f.write(outputstring)
         f.close()
@@ -370,7 +377,7 @@ class LayoutAnalysedfigure():
         self.curfraction =0
         self.block = 1
         self.progresswindow = builder.get_object("progressbar_window")
-        self.progresswindow.set_title("Ocr Status")
+        self.progresswindow.set_title("Lekha in progress")
         self.progress = builder.get_object("ocr_progress")
         self.progress.set_fraction(0) 
         self.progress.set_text("Processing image block 1")
@@ -656,7 +663,7 @@ class Handler:
         sthread.start()
         self.progresswindow = builder.get_object("progressbar_window")
         #self.progresswindow.set_transient_for(window)
-        self.progresswindow.set_title("Scan Status")
+        self.progresswindow.set_title("Scanning in Progress")
         self.scanfraction =0
         self.progress = builder.get_object("ocr_progress")
         self.progress.set_fraction(0) 
@@ -678,6 +685,9 @@ class Handler:
         
         overalapchecker.clear()
         myendcordinates.clear()
+       # textview = builder.get_object("outputtextview")
+       # textbuffer = textview.get_buffer()
+       # textbuffer.remove_all_tags(textbuffer.get_start_iter(),textbuffer.get_end_iter())
         jsonFile = open('conf.json', 'r')
         conf = json.load(jsonFile)
         clfpath = conf["clf_path"]
@@ -710,8 +720,10 @@ class Handler:
         figureobject = LayoutAnalysedfigure()
         im = cv2.imread(imgloc,0)
         #a= sajhead.head(im)
-        h,b=sajhead.boundary(im.copy())
-        a = h + b 
+        h,b=layoutanalyzer.layout(im.copy())
+        #h,b=sajhead.boundary(im.copy())
+        notsortedlist = h + b 
+        a = sorted(notsortedlist,key=lambda x: (x[1],x[0]))
         print(a)
         imgep = builder.get_object("previmage")
         print(imgloc)
@@ -808,12 +820,13 @@ class Handler:
             loc = imgloc
             print(loc)
             out=os.path.join(os.path.split(loc)[0],'skewcorrected'+os.path.splitext(os.path.split(loc)[1])[0]+os.path.splitext(os.path.split(loc)[1])[1])
-            im=cv2.imread(loc,0)
-            img= cv2.adaptiveThreshold(im,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY_INV,243,43)
-            cv2.imwrite(out,img)
+            #img=cv2.imread(loc,0)
+            #img= cv2.adaptiveThreshold(im,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY_INV,243,50)
+            
+            #cv2.imwrite(out,img)
             
             d = Deskew(
-                   input_file=out,
+                   input_file=loc,
                    display_image=None,
                    output_file=out,
                    r_angle=0)
@@ -913,6 +926,30 @@ builder.connect_signals(Handler())
 
 window = builder.get_object("main_window")
 window.set_icon_from_file('lekha2logo.png')
+#textviewstyle
+textview = builder.get_object("outputtextview")
+textbuffer = textview.get_buffer()
+styletag = textview.get_buffer().create_tag("textstyles", background="#80a3b2",weight=Pango.Weight.BOLD ,size=13 * Pango.SCALE)
+
+#progressbarcss
+style_provider = Gtk.CssProvider()
+css = open(('style.css'), 'rb') # rb needed for python 3 support
+css_data = css.read()
+css.close()
+#css = b"""
+#GtkProgressBar {
+#    min-height: 30px;
+#}
+#"""
+
+style_provider.load_from_data(css_data)
+
+Gtk.StyleContext.add_provider_for_screen(
+    Gdk.Screen.get_default(),
+    style_provider,
+    Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+)
+#endofcss
 window.show_all()
 
 Gtk.main()
