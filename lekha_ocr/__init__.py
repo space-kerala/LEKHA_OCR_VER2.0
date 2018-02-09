@@ -20,7 +20,14 @@ import matplotlib.image as mpimg
 import json
 #skew
 from deskew import Deskew
+<<<<<<< HEAD
 
+=======
+#from alyn import Deskew
+#progressbar
+import time
+#import progressbar
+>>>>>>> b95ed9bf3e3893bdf009e5f0291b52372d647b07
 #scanner
 import pyinsane2
 import datetime
@@ -952,3 +959,68 @@ window.show_all()
 
 Gtk.main()
 
+<<<<<<< HEAD
+=======
+#allcommentsforreference
+
+#print(cid)
+#print(cid)
+#rect = plt.Rectangle( (min(x1,x2),min(y1,y2)), np.abs(x1-x2), np.abs(y1-y2),fill =False )
+#ax.add_patch(rect)
+#patch.relim()
+#print(overalapchecker) 
+#def onclick(self,event,patch,connection_id):
+       # if event.dblclick:
+       #     patch =event.artist
+          #  print('double clicked')
+         #   print(patch)
+       #     patch.get_path()
+       #     dx1 = patch.get_x()
+       #     dy1 = patch.get_y()
+       #     dh1 = patch.get_height()
+       #     dw1 = patch.get_width() 
+       #     patch.get_path()
+       #     # patch.set_visible(False)
+       #     print(dx1,dy1,dw1,dh1)
+       #     patch.remove()
+            # matplotlib.axes.Axes.relim(self)
+       #     print('rectangle removed')
+       #     myendcordinates.remove((dx1,dy1,dw1,dh1))
+       #     print(myendcordinates)
+       #     dx2 = dx1 + dw1
+       #     dy2 = dy1 + dh1 
+       #     overalapchecker.remove((dx1,dy1,dx2,dy2))
+       #     self.fig.canvas.mpl_disconnect(connection_id) 
+        #def deletepress(self,event,rect,cid):
+     #   if event.key == 'delete':    
+      #      self.rect.set_visible(False)  
+       #     myendcordinates.clear()
+       #     overalapchecker.clear()
+        #    print(myendcordinates)
+
+           
+
+    #def callback(event):
+      #  print (event.xdata, event.ydata)
+
+
+    #plt.disconnect(cid)
+    #fig.canvas.callbacks.connect('button_press_event', callback)
+  #  def onpickrect(self,event):
+       
+  #      if isinstance(event.artist, Rectangle):
+  #          print("hey you are inside a rectangle")
+
+          #  rect.set_visible(False)  
+
+       # elif event.key != 'enter':    
+       #        print("disconnecting id=",cid) 
+       #        plt.disconnect(cid)               
+#clearbuttonpassingdataclass
+#class ButtonDataProcessor(object):
+  #  def __init__(self,bnclear,rect):
+   #     self.rect =rect
+    #    bnclear.on_clicked(self.process)
+       # connection_id = fig.canvas.mpl_connect('button_press_event', lambda event: onclick(event,patch,connection_id))   
+            
+>>>>>>> b95ed9bf3e3893bdf009e5f0291b52372d647b07
