@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Type=Application
+Name=lekha ocr ver.2.0
+Icon=__init___py.png
+Path=/usr/local/lib/python3.5/dist-packages/lekha_ocr
+Exec=python3 __init__.py
+StartupNotify=false
+StartupWMClass=__init__.py
+OnlyShowIn=Unity;
+X-UnityGenerated=true
+Name[en_US]=lekha ocr ver2.0
