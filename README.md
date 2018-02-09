@@ -1,5 +1,7 @@
 # LEKHA_OCR_VER2.0
 installation
+'
+
 Dowload zip         
 extract it
 navigate to extracted folder  
