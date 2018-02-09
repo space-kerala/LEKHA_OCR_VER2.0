@@ -1,0 +1,12 @@
+include lekha_ocr/conf.json
+include lekha_ocr/frontend
+include lekha_ocr/frontend/*.glade
+include lekha_ocr/frontend/*.png
+include lekha_ocr/lekha2logo.png
+include lekha_ocr/*.pickle
+include lekha_ocr/*.pkl
+include lekha_ocr/*.css
+include lekha_ocr/c140_1/_.lekha
+include lekha_ocr/pickle/data.pkl
+
+
