@@ -23,7 +23,7 @@ from deskew import Deskew
 #from alyn import Deskew
 #progressbar
 import time
-import progressbar
+#import progressbar
 #scanner
 import pyinsane2
 import datetime
