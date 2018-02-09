@@ -79,4 +79,4 @@ if [ $? != 0 ]; then
 fi
 
 sudo pip3 install .
-sudo cp -f lekha_ocr_ver2.desktop /usr/share/applications/
+sudo cp -f lekha_ocr_ver2.desktop $HOME/.local/share/applications/
