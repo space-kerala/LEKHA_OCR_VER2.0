@@ -5,6 +5,7 @@ sudo apt-get install -y python3-matplotlib
 sudo apt-get install -y python3-pip
 sudo rm -rf /usr/local/lib/python3.5/dist-packages/lekha_ocr
 sudo rm -rf /usr/local/lib/python3.5/dist-packages/lekha_ocr-2.0-py3.5.egg-info/
+sudo rm -rf /usr/local/lib/python3.5/dist-packages/lekha_ocr-2.0.egg-info/
 sudo pkg-config --modversion opencv | grep '3' &> /dev/null
 if [ $? != 0 ]; then
    echo "opencv not installed in your machine compiling and installing opencv 3.2,time consuming process please wait patiently"	
