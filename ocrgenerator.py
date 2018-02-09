@@ -336,7 +336,8 @@ class LayoutAnalysedfigure():
 
     def ocrthread(self):    
        # progressw =  ProgressBarWindow()
-        
+        global myendcordinates
+        myendcordinates = sorted(myendcordinates,key=lambda x: (x[1],x[0]))
         
         outputstring =''   
         img = cv2.imread(imgloc,0)
@@ -352,8 +353,8 @@ class LayoutAnalysedfigure():
             w = int(c[2])
             crop_img = img[y:y+h, x:x+w]
             text = ocr.lekha_run(crop_img)
-            filename = str(c[0]) + ".jpg"
-            cv2.imwrite(filename,crop_img)
+            #filename = str(c[0]) + ".jpg"
+            #cv2.imwrite(filename,crop_img)
             strtext = str(text)
             outputstring = outputstring + "\n" + strtext
             #print(strtext)
@@ -363,9 +364,9 @@ class LayoutAnalysedfigure():
         textview.get_buffer().set_text(outputstring)
         textbuffer =textview.get_buffer()
         textview.get_buffer().apply_tag(styletag,textbuffer.get_start_iter(),textbuffer.get_end_iter())
-        f = open('test.txt', 'w')
-        f.write(outputstring)
-        f.close()
+        #f = open('test.txt', 'w')
+        #f.write(outputstring)
+        #f.close()
 
     def proceedtoocr(self,event):
         #do cutting image and calling ocr one by one later
@@ -722,9 +723,9 @@ class Handler:
         #a= sajhead.head(im)
         h,b=layoutanalyzer.layout(im.copy())
         #h,b=sajhead.boundary(im.copy())
-        notsortedlist = h + b 
-        a = sorted(notsortedlist,key=lambda x: (x[1],x[0]))
-        print(a)
+        a = h + b 
+        #a = sorted(notsortedlist,key=lambda x: (x[1],x[0]))
+        #print(a)
         imgep = builder.get_object("previmage")
         print(imgloc)
         #img = np.array(Image.open('/home/space-kerala/Downloads/test1.png'), dtype=np.uint8)
