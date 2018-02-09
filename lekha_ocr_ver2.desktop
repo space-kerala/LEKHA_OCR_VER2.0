@@ -8,6 +8,4 @@ Path=/usr/local/lib/python3.5/dist-packages/lekha_ocr
 Exec=python3 __init__.py
 StartupNotify=false
 StartupWMClass=__init__.py
-OnlyShowIn=Unity;
-X-UnityGenerated=true
 Name[en_US]=lekha ocr ver2.0
