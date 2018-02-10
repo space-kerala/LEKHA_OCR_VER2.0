@@ -13,32 +13,32 @@ In other words, let the machine do most of the malayalam typing work for you.
 ### Main Window
 
 <a href="">
-  <img src="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_1.png" width="447" height="262" />
+  <img src="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_mainwindow.png" width="447" height="262" />
 </a>
 
 ### Main Window after convertion
 <a href="">
-  <img src="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_5.png" width="447" height="262" />
+  <img src="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_output.png" width="447" height="262" />
 </a>
 
 
 ### Settings Window
 
 <a href="">
-  <img src="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_3.png" width="447" height="262" />
+  <img src="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_settings.png" width="447" height="262" />
 </a>
 
 
 ### Layout Analyzed Image
 
 <a href="">
-  <img src="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_2.png" width="447" height="262" />
+  <img src="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_layout.png" width="447" height="262" />
 </a>
 
 ### Crop
 
 <a href="">
-  <img src="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_4.png" width="447" height="262" />
+  <img src="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_crop.png" width="447" height="262" />
 </a>
 
 
