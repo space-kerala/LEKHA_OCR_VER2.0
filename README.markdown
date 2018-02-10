@@ -63,6 +63,7 @@ In other words, let the machine do most of the malayalam typing work for you.
 
 * git clone https://github.com/space-kerala/LEKHA_OCR_VER2.0.git
 * Navigate to root distribution directory
+* sudo apt-get update
 * sudo bash lekha2-install.sh
 * installation done  
 
