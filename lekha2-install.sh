@@ -1,5 +1,6 @@
 #sudo rm $HOME/.local/share/applications/lekha_ocr_ver2.desktop
 umask 022
+sudo apt-get -y update
 sudo apt-get install -y python3.5
 sudo apt-get install -y python3-matplotlib
 sudo apt-get install -y python3-pip
@@ -24,13 +25,13 @@ if [ $? != 0 ]; then
 
    # 1. KEEP UBUNTU OR DEBIAN UP TO DATE
 
-   sudo apt-get -y update
-   sudo apt-get -y upgrade
-   sudo apt-get -y dist-upgrade
-   sudo apt-get -y autoremove
+   #sudo apt-get -y update
+   #sudo apt-get -y upgrade
+   #sudo apt-get -y dist-upgrade
+   #sudo apt-get -y autoremove
 
 
-   # 2. INSTALL THE DEPENDENCIES
+   # 2. INSTALL THE OPENCV DEPENDENCIES
 
    # Build tools:
    sudo apt-get install -y build-essential cmake
