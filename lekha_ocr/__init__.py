@@ -1,4 +1,21 @@
 #!/usr/bin/env python3
+
+#    Lekha Ocr version 2.0 - Convert your malayalam documents and images to editable text
+#    Copyright (C) 2018 Space-kerala (Society For Promotion of Alternative Computing and Employment)
+
+#    Lekha Ocr version 2.0 is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+
+#    Lekha Ocr version 2.0 is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import GLib, Gtk, Gdk, GObject,Pango
@@ -927,7 +944,7 @@ window.set_icon_from_file('lekha2logo.png')
 #textviewstyle
 textview = builder.get_object("outputtextview")
 textbuffer = textview.get_buffer()
-styletag = textview.get_buffer().create_tag("textstyles", background="#80a3b2",weight=Pango.Weight.BOLD ,size=13 * Pango.SCALE)
+styletag = textview.get_buffer().create_tag("textstyles",weight=Pango.Weight.BOLD ,size=13 * Pango.SCALE)
 
 #progressbarcss
 style_provider = Gtk.CssProvider()
