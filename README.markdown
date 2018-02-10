@@ -12,32 +12,32 @@ In other words, let the machine do most of the malayalam typing work for you.
 
 ### Main Window
 
-<a href="">
+<a href="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_mainwindow.png">
   <img src="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_mainwindow.png" width="447" height="262" />
 </a>
 
 ### Main Window after convertion
-<a href="">
+<a href="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_output.png">
   <img src="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_output.png" width="447" height="262" />
 </a>
 
 
 ### Settings Window
 
-<a href="">
+<a href="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_settings.png">
   <img src="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_settings.png" width="447" height="262" />
 </a>
 
 
 ### Layout Analyzed Image
 
-<a href="">
+<a href="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_layout.png">
   <img src="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_layout.png" width="447" height="262" />
 </a>
 
 ### Crop
 
-<a href="">
+<a href="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_crop.png">
   <img src="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_crop.png" width="447" height="262" />
 </a>
 
@@ -72,11 +72,13 @@ In other words, let the machine do most of the malayalam typing work for you.
 It mainly uses:
 
 * [Pyinsane2](https://pypi.python.org/pypi/pyinsane2): To scan the pages
-* [OPENCV]](https://github.com/opencv/opencv): for image manipulation and calculations
-* [Lekha_ocrv2]: To extract the words from the page (OCR)
+* [OPENCV](https://github.com/opencv/opencv): for image manipulation and calculations
+* [Lekha_ocrv2](https://github.com/space-kerala/LEKHA_OCR_VER2.0/tree/master/lekha_ocr)(OCR)
 * [GTK+](http://www.gtk.org/): For the user interface
 * [PYGOBJECT](https://pygobject.readthedocs.io/): python binding for Gtk+
+* [Matplotlib](https://matplotlib.org/): Selection and for layout analyzed output correction features
 * [Pillow](https://pypi.python.org/pypi/Pillow/)
+
 
 
 ## Licence
