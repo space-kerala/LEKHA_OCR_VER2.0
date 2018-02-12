@@ -25,7 +25,7 @@ In other words, let the machine do most of the malayalam typing work for you.
 ### Settings Window
 
 <a href="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_settings.png">
-  <img src="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_settings.png" width="447" height="262" />
+  <img src="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_settings.png" width="300" height="400" />
 </a>
 
 
@@ -85,18 +85,19 @@ It mainly uses:
   Team under Arun M    
 * [Sachin Gracious](https://github.com/sachingracious)
 * [Sajaras k](https://github.com/sajaras)
-* Yadhukrishnan SP
+* [Yadhukrishnan SP](https://github.com/yadu17)
 
 ## Contributors
-* [Arun Joseph](https://github.com/arunjoseph0) lekha ocr 1.0
+* [Arun Joseph](https://github.com/arunjoseph0) [lekha ocr 1.0](https://gitlab.com/space-kerala/lekha-OCR)
+* Ambily Sreekumar, contributed in building data sets for training.
 
+## Supporters
+   This project is developed by [SPACE-KERALA](https://github.com/space-kerala) in association with ICFOSS
 
 
 ## Licence
 
 GPLv3 only. See License.md
-
-
 
 
 ## Development
