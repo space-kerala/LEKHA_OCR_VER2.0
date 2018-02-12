@@ -81,10 +81,22 @@ It mainly uses:
 * [Pillow](https://pypi.python.org/pypi/Pillow/)
 
 
+## Creators
+* Team under Arun M    
+* [Sachin Gracious](https://github.com/sachingracious)
+* [Sajaras k](https://github.com/sajaras)
+* Yadhukrishnan SP
+
+## Contributors
+* [Arun Joseph](https://github.com/arunjoseph0) lekha ocr 1.0
+
+
 
 ## Licence
 
 GPLv3 only. See License.md
+
+
 
 
 ## Development

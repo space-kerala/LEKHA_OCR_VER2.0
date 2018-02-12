@@ -72,6 +72,8 @@ if [ $? != 0 ]; then
    make -j4
    sudo make install
    sudo ldconfig
+   cd ..
+   cd ..
    sudo rm -rf OPENCV/
    
    # 4. EXECUTE SOME OPENCV EXAMPLES AND COMPILE A DEMONSTRATION
@@ -83,3 +85,4 @@ fi
 
 sudo pip3 install .
 sudo cp -f lekha_ocr_ver2.desktop /usr/share/applications/
+sudo chmod 666 /usr/local/lib/python3.5/dist-packages/lekha_ocr/conf.json 
