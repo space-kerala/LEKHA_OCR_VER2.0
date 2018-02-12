@@ -488,13 +488,13 @@
     <property name="transient_for">main_window</property>
     <property name="program_name">LEKHA OCR version 2.0</property>
     <property name="version">Malayalam OCR </property>
-    <property name="copyright" translatable="yes">Space kerala.org</property>
+    <property name="copyright" translatable="yes">Space-Kerala &amp; ICFOSS</property>
     <property name="website">https://github.com/space-kerala/LEKHA_OCR_VER2.0</property>
     <property name="website_label" translatable="yes">github link</property>
-    <property name="authors">Arun
+    <property name="authors">Arun M
 Sachin Gracious
 Sajaras k
-Yadhukrishnan Sp
+Yadhukrishnan K
 </property>
     <property name="artists">
 
@@ -537,7 +537,6 @@ Yadhukrishnan Sp
     <property name="window_position">center-always</property>
     <property name="type_hint">dialog</property>
     <property name="skip_taskbar_hint">True</property>
-    <property name="deletable">False</property>
     <signal name="delete-event" handler="on_progresswindow_close" swapped="no"/>
     <child>
       <object class="GtkBox">

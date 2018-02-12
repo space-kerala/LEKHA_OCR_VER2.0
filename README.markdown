@@ -67,6 +67,8 @@ In other words, let the machine do most of the malayalam typing work for you.
 * sudo bash lekha2-install.sh
 * installation done  
 
+## To Uninstall
+* sudo bash uninstall.sh 
 
 ## Details
 

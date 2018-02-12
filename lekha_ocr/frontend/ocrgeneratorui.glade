@@ -488,19 +488,20 @@
     <property name="transient_for">main_window</property>
     <property name="program_name">LEKHA OCR version 2.0</property>
     <property name="version">Malayalam OCR </property>
-    <property name="copyright" translatable="yes">Space kerala.org</property>
+    <property name="copyright" translatable="yes">Space-Kerala &amp; ICFOSS</property>
     <property name="website">https://github.com/space-kerala/LEKHA_OCR_VER2.0</property>
     <property name="website_label" translatable="yes">github link</property>
-    <property name="authors">Arun
+    <property name="authors">Arun M
 Sachin Gracious
 Sajaras k
-Yadhukrishnan Sp
+Yadhukrishnan K
 </property>
     <property name="artists">
 
 
 </property>
     <property name="logo">lekha2about.png</property>
+    <property name="license_type">gpl-3-0-only</property>
     <signal name="activate-link" handler="on_about" swapped="no"/>
     <signal name="delete-event" handler="closewindow" swapped="no"/>
     <child internal-child="vbox">
