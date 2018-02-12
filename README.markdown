@@ -82,7 +82,7 @@ It mainly uses:
 
 
 ## Creators
-* Team under Arun M    
+  Team under Arun M    
 * [Sachin Gracious](https://github.com/sachingracious)
 * [Sajaras k](https://github.com/sajaras)
 * Yadhukrishnan SP
