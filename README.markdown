@@ -85,7 +85,7 @@ It mainly uses:
   Team under Arun M    
 * [Sachin Gracious](https://github.com/sachingracious)
 * [Sajaras k](https://github.com/sajaras)
-* [Yadhukrishnan SP](https://github.com/yadu17)
+* [Yadhukrishnan K](https://github.com/yadu17)
 
 ## Contributors
 * [Arun Joseph](https://github.com/arunjoseph0) [lekha ocr 1.0](https://gitlab.com/space-kerala/lekha-OCR)
