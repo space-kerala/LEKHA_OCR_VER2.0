@@ -30,7 +30,7 @@ setup(
     packages=['lekha_ocr'],
     classifiers=[],
     license='GPL-3.0-only',
-    install_requires=['opencv-python','ipython','pygobject','Pillow','matplotlib','scikit-image','pyinsane2','pandas','scikit-learn'],
+    install_requires=['ipython','pygobject','Pillow','matplotlib','scikit-image','pyinsane2','pandas','scikit-learn'],
     include_package_data=True,
     zip_safe=False,
    
