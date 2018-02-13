@@ -25,7 +25,7 @@ In other words, let the machine do most of the malayalam typing work for you.
 ### Settings Window
 
 <a href="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_settings.png">
-  <img src="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_settings.png" width="534" height="300" />
+  <img src="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_settings.png" width="280" height="300" />
 </a>
 
 
@@ -38,7 +38,7 @@ In other words, let the machine do most of the malayalam typing work for you.
 ### Crop
 
 <a href="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_crop.png">
-  <img src="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_crop.png" width="447" height="262" />
+  <img src="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_crop.png" width="353" height="300" />
 </a>
 
 
