@@ -87,12 +87,16 @@ class Cropfigure():
         y = int(self.cropy1)
         h = int(self.cropy2 - self.cropy1)
         w = int(self.cropx2 - self.cropx1)
-        croppedimage = self.img[y:y+h, x:x+w]
-        
+       # print(x,y,h,w)
+      
+        croppedimage =self.img.crop((x, y, w, h)) 
         loc = imgloc
         print(loc)
+        
         fullfilepath=os.path.join(os.path.split(loc)[0],'cropped'+os.path.splitext(os.path.split(loc)[1])[0]+os.path.splitext(os.path.split(loc)[1])[1])
-        cv2.imwrite(fullfilepath,croppedimage)
+        print(fullfilepath)
+       # cv2.imwrite(fullfilepath,croppedimage)
+        croppedimage.save(fullfilepath)
         imgloc =fullfilepath
         img = builder.get_object("previmage")
         img.set_from_file(imgloc)
@@ -883,7 +887,9 @@ class Handler:
             cropobj =   Cropfigure()  
             
  
-            cropobj.img = mpimg.imread(imgloc)
+       
+            cropobj.img = Image.open(imgloc)
+
             cropobj.cropax.imshow(cropobj.img, aspect = 'equal',extent = None)
             plt.show()
     
