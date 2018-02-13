@@ -13,26 +13,26 @@ In other words, let the machine do most of the malayalam typing work for you.
 ### Main Window
 
 <a href="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_mainwindow.png">
-  <img src="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_mainwindow.png" width="447" height="262" />
+  <img src="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_mainwindow.png" width="534" height="300" />
 </a>
 
 ### Main Window after convertion
 <a href="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_output.png">
-  <img src="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_output.png" width="447" height="262" />
+  <img src="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_output.png" width="534" height="300" />
 </a>
 
 
 ### Settings Window
 
 <a href="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_settings.png">
-  <img src="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_settings.png" width="300" height="400" />
+  <img src="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_settings.png" width="534" height="300" />
 </a>
 
 
 ### Layout Analyzed Image
 
 <a href="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_layout.png">
-  <img src="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_layout.png" width="447" height="262" />
+  <img src="https://github.com/space-kerala/LEKHA_OCR_VER2.0/blob/master/screenshots/screenshot_layout.png" width="534" height="300" />
 </a>
 
 ### Crop
@@ -61,8 +61,9 @@ In other words, let the machine do most of the malayalam typing work for you.
 
 ## Installation
 
-* git clone https://github.com/space-kerala/LEKHA_OCR_VER2.0.git
-* Navigate to root distribution directory
+* git clone https://github.com/space-kerala/LEKHA_OCR_VER2.0.git 
+  (or Download zip and extract)
+* Navigate to the cloned or extracted directory
 * sudo apt-get update
 * sudo bash lekha2-install.sh
 * installation done  
