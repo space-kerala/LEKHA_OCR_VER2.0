@@ -95,7 +95,7 @@ It mainly uses:
 * Ambily Sreekumar, contributed in building data sets for training.
 
 ## Supporters
-   This project is developed by [SPACE-KERALA](https://github.com/space-kerala) in association with ICFOSS
+   This project is developed by [SPACE-KERALA](https://github.com/space-kerala) in association with [ICFOSS](https://icfoss.in)
 
 
 ## Licence
