@@ -91,11 +91,16 @@ It mainly uses:
 * [Yadhukrishnan K](https://github.com/yadu17)
 
 ## Contributors
-* [Arun Joseph](https://github.com/arunjoseph0) [lekha ocr 1.0](https://gitlab.com/space-kerala/lekha-OCR)
-* Ambily Sreekumar, contributed in building data sets for training.
+* Arun M helped in project management and technical assistance.
+* Ambily Sreekumar,contributed in building data set for training.
+* [Jithin thankachan](https://github.com/jithin-space):contributed in training tool and helped in documentation.
+* [Arun Joseph](https://github.com/arunjoseph0):contributed most of the engine initial  developments of [Lekha ocr 1.0](https://gitlab.com/space-kerala/lekha-OCR)
+* Balagopal Unnikrishnan : Contributed in preparing XML label for training and helped in documentation of[Lekha ocr 1.0](https://gitlab.com/space-kerala/lekha-OCR)
+* Rijoy V : Contributed in initial research of [Lekha OCR ver 1.0](https://gitlab.com/space-kerala/lekha-OCR)
 
 ## Supporters
-   This project is developed by [SPACE-KERALA](https://github.com/space-kerala) in association with [ICFOSS](https://icfoss.in)
+   
+This project is developed by [SPACE-KERALA](https://github.com/space-kerala) in association with [ICFOSS](https://icfoss.in)
 
 
 ## Licence
