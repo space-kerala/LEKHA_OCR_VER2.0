@@ -1,5 +1,6 @@
+#    Deskew feature is adopted from Alyn project done by kakul.
 #    Lekha Ocr version 2.0 - Convert your malayalam documents and images to editable text
-#    Copyright (C) 2018 Space-kerala (Society For Promotion of Alternative Computing and Employment)
+#    
 
 #    Lekha Ocr version 2.0 is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by

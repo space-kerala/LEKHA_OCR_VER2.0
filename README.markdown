@@ -50,7 +50,7 @@ In other words, let the machine do most of the malayalam typing work for you.
 * Import image from files
 * Image layout analysis and feature to correct the result.
 * Malayalam ocr (lekha_ocrv2)
-* Image Skew correction
+* [Image Skew correction](https://github.com/kakul/Alyn/tree/master/alyn)
 * Rotate image
 * Crop image
 * Set Workspace Directory 

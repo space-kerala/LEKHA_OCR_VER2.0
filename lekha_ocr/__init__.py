@@ -91,10 +91,10 @@ class Cropfigure():
       
         croppedimage =self.img.crop((x, y, w, h)) 
         loc = imgloc
-        print(loc)
+        #print(loc)
         
         fullfilepath=os.path.join(os.path.split(loc)[0],'cropped'+os.path.splitext(os.path.split(loc)[1])[0]+os.path.splitext(os.path.split(loc)[1])[1])
-        print(fullfilepath)
+        #print(fullfilepath)
        # cv2.imwrite(fullfilepath,croppedimage)
         croppedimage.save(fullfilepath)
         imgloc =fullfilepath
@@ -108,7 +108,7 @@ class Cropfigure():
     def crop_select(self,eclick, erelease):
         self.cropx1, self.cropy1 = eclick.xdata, eclick.ydata
         self.cropx2, self.cropy2 = erelease.xdata, erelease.ydata
-        print(self.cropx1,self.cropy1,self.cropx2,self.cropy2 )
+        #print(self.cropx1,self.cropy1,self.cropx2,self.cropy2 )
         self.bncrop.on_clicked(self.cropimagebyselection)
         #croutside = self.fig.canvas.mpl_connect('button_press_event', lambda event: self.cropselectoroutsideclick(event,cid))
                 
@@ -153,12 +153,12 @@ class LayoutAnalysedfigure():
             
         # If one rectangle is on left side of other
         if l1x > r2x or l2x > r1x :
-            print("i am printing in first if condition")
+            #print("i am printing in first if condition")
             return False
      
         #If one rectangle is above other
         if l1y > r2y or l2y > r1y :
-            print("i am printing in second if condition")
+            #print("i am printing in second if condition")
             return False    
         return True
 
@@ -181,12 +181,12 @@ class LayoutAnalysedfigure():
             l1y = overalapchecker[i][1]
             r1x = overalapchecker[i][2]
             r1y = overalapchecker[i][3]
-            print(l1x,l1y,r1x,r1y)
+            #print(l1x,l1y,r1x,r1y)
             ovrlap = self.checkoverlap(l1x,l1y,r1x,r1y,l2x,l2y,r2x,r2y)
-            print(ovrlap)  
+            #print(ovrlap)  
             if(ovrlap) :
-                print(ovrlap)
-                print(cid)     
+               # print(ovrlap)
+               # print(cid)     
                 self.rs.to_draw.set_visible(False)
                 self.fig.canvas.mpl_disconnect(cid)
                
@@ -200,18 +200,18 @@ class LayoutAnalysedfigure():
 
 
     def press(self,event,x1,y1,x2,y2,cid):
-        print('press', event.key)
+        #print('press', event.key)
        # print (x1,y1,x2,y2,cid)
         sys.stdout.flush()
         if event.key == 'enter':
-            print("Enter Key pressed")
-            print("current selection box id=",cid)
+            #print("Enter Key pressed")
+            #print("current selection box id=",cid)
             width = x2-x1
             height = y2-y1
-            print(width,height)
+           # print(width,height)
             myendcordinates.append((x1,y1,width,height))
             overalapchecker.append((x1,y1,x2,y2))
-            print(myendcordinates)
+           # print(myendcordinates)
             
 
             #print(myendcordinates)
@@ -219,14 +219,14 @@ class LayoutAnalysedfigure():
             self.rect.append(plt.Rectangle( (min(x1,x2),min(y1,y2)), np.abs(x1-x2), np.abs(y1-y2),fill =False,picker=True))
             self.ax.add_patch(self.rect[-1])
             #self.fig.canvas.mpl_connect('key_press_event', lambda event: self.deletepress(event,rect,cid))
-            print(self.rect[-1])
+            # print(self.rect[-1])
            
            
 
     def outsideclick(self,event,cid):
-      #  print(event.xdata,event.ydata)
-        print("disconnecting",cid)
-       # plt.disconnect(cid)
+        #  print(event.xdata,event.ydata)
+        #  print("disconnecting",cid)
+        # plt.disconnect(cid)
         self.fig.canvas.mpl_disconnect(cid)     
         
    
@@ -240,8 +240,8 @@ class LayoutAnalysedfigure():
             height=patch.get_height()
             #rectevent = event
           #  patch.remove()
-            print('onpick1 patch:', patch.get_path())
-            print("heigth=",height)
+          #  print('onpick1 patch:', patch.get_path())
+          #  print("heigth=",height)
             patch.get_path()
             dx1 = patch.get_x()
             dy1 = patch.get_y()
@@ -252,28 +252,28 @@ class LayoutAnalysedfigure():
             patch.get_path()
             # patch.set_visible(False)
             patch.remove()
-            print(len(self.rect))
-            print(patch)
+         #   print(len(self.rect))
+         #   print(patch)
             
             if patch in self.rect :
-                print("yes present")
+             #   print("yes present")
                 self.rect.remove(patch)
                 myendcordinates.remove((dx1,dy1,dw1,dh1))
                 overalapchecker.remove((dx1,dy1,dx2,dy2))
-                print('rectangle removed')
+             #   print('rectangle removed')
             else :
                 print ("%s not present" %(patch)) 
 
             
-            print(len(self.rect))
+           # print(len(self.rect))
             #print(patch)
            
 
             # matplotlib.axes.Axes.relim(self)
           
            
-            for i, e in reversed(list(enumerate(self.rect))):
-                print(i, e)
+            #for i, e in reversed(list(enumerate(self.rect))):
+             #   print(i, e)
             #print(myendcordinates)
            
             #print(dx1,dy1,dx2,dy2)
@@ -284,60 +284,37 @@ class LayoutAnalysedfigure():
            # print(dwr) 
           #  print(remrect)
                  
-            print(len(self.rect))
+          #  print(len(self.rect))
              
         
 
    
    
     def boxundoing(self,event):
-        #print(self.rect)
-      
-        #print(self.rect[-1])
         self.rect[-1].set_visible(False)
         self.rect.pop() 
-        #n = len(self.rect)
-        #print(n)
-        #for i, e in reversed(list(enumerate(self.rect))):
-        #    if e.get_visible() == True :
-        #        print(i, e)
-        #        print(e.get_visible())
-        #        e.set_visible(False)
-        #        print(e.get_visible())
-        #        break
+       
         myendcordinates.pop()
         n = len(self.rect)
-        print(n)
+      
         p = len(myendcordinates)
-        print("length of myendcordinates = %d" %(p))
+        
         overalapchecker.pop()
         q= len(overalapchecker)
-        print("length of myendcordinates = %d" %(q))
-        print(myendcordinates)
-        for i, e in reversed(list(enumerate(self.rect))):
-            print(i, e)
-
+      
     def boxclearing(self,event):
-        
-       # self.rect[-1].set_visible(False)
-       # self.rect.pop() 
-        #n = len(self.rect)
-        #print(n)
         for i, e in reversed(list(enumerate(self.rect))):
             e.set_visible(False)
            
         myendcordinates.clear()
         self.rect.clear()
         n = len(self.rect)
-        print(n)
+       
         p = len(myendcordinates)
-        print("length of myendcordinates = %d" %(p))
+      
         overalapchecker.clear()
         q= len(overalapchecker)
-        print("length of myendcordinates = %d" %(q))
-        print(myendcordinates)
-        for i, e in reversed(list(enumerate(self.rect))):
-            print(i, e)
+       
    
     def update_progess(self,i):
         self.progress = builder.get_object("ocr_progress")
@@ -347,52 +324,44 @@ class LayoutAnalysedfigure():
         self.progress.set_text(text)
         if self.curfraction > 0.9:
            progresswindow = builder.get_object("progressbar_window")
-           print("progressbar closed")
            progresswindow.hide()
         
         return False
 
     def ocrthread(self):    
-       # progressw =  ProgressBarWindow()
+       
         global myendcordinates
         myendcordinates = sorted(myendcordinates,key=lambda x: (x[1],x[0]))
         
         outputstring =''   
         img = cv2.imread(imgloc,0)
-        print(len(myendcordinates))
+      
         for c in myendcordinates:
-           #print(c[0])
-           # print(c[1])
-           # print(c[2])
-           # print(c[3])
+        
             x = int(c[0])
             y = int(c[1])
             h = int(c[3])
             w = int(c[2])
             crop_img = img[y:y+h, x:x+w]
             text = ocr.lekha_run(crop_img)
-            #filename = str(c[0]) + ".jpg"
-            #cv2.imwrite(filename,crop_img)
+           
             strtext = str(text)
             outputstring = outputstring + "\n" + strtext
-            #print(strtext)
+          
             GLib.idle_add(self.update_progess,0)
             self.block = self.block +1
         textview = builder.get_object("outputtextview")
         textview.get_buffer().set_text(outputstring)
         textbuffer =textview.get_buffer()
         textview.get_buffer().apply_tag(styletag,textbuffer.get_start_iter(),textbuffer.get_end_iter())
-        #f = open('test.txt', 'w')
-        #f.write(outputstring)
-        #f.close()
+       
 
     def proceedtoocr(self,event):
-        #do cutting image and calling ocr one by one later
+       
         plt.close('all')
         self.p = len(myendcordinates)
-        print("length of myendcordinates(ocr) = %d" %(self.p))
+     
         self.incfactor = 1/(self.p)
-        print(self.incfactor)
         self.curfraction =0
         self.block = 1
         self.progresswindow = builder.get_object("progressbar_window")
@@ -405,8 +374,6 @@ class LayoutAnalysedfigure():
         thread.daemon = True
         thread.start()
         self.progresswindow = builder.get_object("progressbar_window")
-        
-        #self.progresswindow.set_transient_for(window)
         self.progresswindow.show_all()
 
     
@@ -425,7 +392,7 @@ class Handler:
         jsonFile = open('conf.json', 'r')
         conf = json.load(jsonFile)
         ws_dir = conf["workspace_dir"]
-        print(ws_dir)
+       
         clf_path =conf['clf_path']
         clf_folder = conf['clf_fold']
         workspacebutton = builder.get_object("workspace")
@@ -439,9 +406,7 @@ class Handler:
         preference_dialog.show()
     #havetoimplement
     def workspace_changed(self, widget):
-        print("clf_folder changed")
-        print(widget.get_filename())
-        #reading json object
+    
         jsonFile = open('conf.json', 'r')
         conf = json.load(jsonFile)
         jsonFile.close()
@@ -454,9 +419,7 @@ class Handler:
         jsonFile.close()
 
     def clf_folder_changed(self, widget):
-        print("clf_folder changed")
-        print(widget.get_filename())
-        #reading json object
+      
         jsonFile = open('conf.json', 'r')
         conf = json.load(jsonFile)
         jsonFile.close()
@@ -469,8 +432,7 @@ class Handler:
         jsonFile.close()
 
     def clf_path_changed(self, widget):
-        print("clf_path changed") 
-        print(widget.get_filename())
+     
         #reading json object
         jsonFile = open('conf.json', 'r')
         conf = json.load(jsonFile)
@@ -501,12 +463,12 @@ class Handler:
     def error_message_box_close(self, arg1, arg2):
         errprmessagewindow = builder.get_object("error_message_box")
         errprmessagewindow.hide()
-        print("errorbox closing")
+     
         return True
     
     def on_progresswindow_close(self, arg1, arg2):
         progresswindow = builder.get_object("progressbar_window")
-        print("progressbar closed")
+      
         progresswindow.hide()
         return True
 
@@ -521,8 +483,7 @@ class Handler:
 
         response = dialog.run()
         if response == Gtk.ResponseType.OK:
-            print("Open clicked")
-            print("File selected: " + dialog.get_filename())
+         
             global imgloc
             imgloc = dialog.get_filename()
             sw = builder.get_object("scrolled_window")   
@@ -569,7 +530,7 @@ class Handler:
         dialog.add_filter(filter_any)
     
     def savetextbuttonclicked(self, widget):
-        print ('saveButton clicked')
+       
         savechooser = Gtk.FileChooserDialog("Save to text", None,
             Gtk.FileChooserAction.SAVE,
             (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
@@ -580,15 +541,12 @@ class Handler:
         response = savechooser.run() 
         if response == Gtk.ResponseType.OK:
             filename = savechooser.get_filename()
-            print(filename, 'selected.')
+           
             textview = builder.get_object("outputtextview")
             textbuffer = textview.get_buffer()
             text = textbuffer.get_text(textbuffer.get_start_iter(),textbuffer.get_end_iter(),True)
 
-           # text = textview.get_text(textview.get_start_iter(),
-            #            buf.get_end_iter(),
-             #           True)
-            print(text)
+          
             try:
                 open(filename, 'w').write(text)
             except SomeError as err:
@@ -627,7 +585,7 @@ class Handler:
             if len(devices) > 0 :
                 assert(len(devices) > 0)
                 device = devices[0]
-                print("I'm going to use the following scanner: %s" % (str(device)))
+            
                 GLib.idle_add(self.showprogressbar)
                 pyinsane2.set_scanner_opt(device, 'resolution', [300])
 
@@ -644,8 +602,7 @@ class Handler:
                     while True:
                         scan_session.scan.read()
                         GLib.idle_add(self.updatescanprogress)
-                        #self.countread = self.countread + 1
-                        #print(self.countread)
+                       
                 except EOFError:
                     pass
                 scannedimage = scan_session.images[-1]
@@ -656,7 +613,7 @@ class Handler:
                 filename = ws_dir +"/" + str(datetime.datetime.now()) 
                 global imgloc
                 imgloc = filename
-                print(imgloc)
+              
                 scannedimage.save(filename,"JPEG")
                 jsonFile.close()
                 textviewinitial = builder.get_object("outputtextview")
@@ -669,7 +626,7 @@ class Handler:
                 zoomout = 1
              
             else:
-                print("no device detected")
+             
                 GLib.idle_add(self.nodeviceconnected)
                 
             
@@ -712,13 +669,13 @@ class Handler:
         jsonFile = open('conf.json', 'r')
         conf = json.load(jsonFile)
         clfpath = conf["clf_path"]
-        #print(clfpath)
+       
         jsonFile.close()
         clfpathfilename =os.path.basename(clfpath)
-        print(clfpathfilename)
+       
         clfname = "_.lekha"
         if clfname != clfpathfilename:
-            print("not same")
+           
             errorwindow = builder.get_object("error_message_box")
             errorwindow.set_transient_for(window)
             errorwindow.set_markup("<b>Classifier file path is incorrect in the preference</b>")
@@ -726,10 +683,9 @@ class Handler:
             errorwindow.show()
             return 0
                  
-        #print(clpathfilename)
-        print(imgloc)
+       
         if imgloc == 0 :
-            print ("imgloc is  0")
+          
             errorwindow = builder.get_object("error_message_box")
             errorwindow.set_transient_for(window)
             errorwindow.set_markup("<b>No Image loaded to the application</b>")
@@ -744,22 +700,15 @@ class Handler:
         h,b=layoutanalyzer.layout(im.copy())
         #h,b=sajhead.boundary(im.copy())
         a = h + b 
-        #a = sorted(notsortedlist,key=lambda x: (x[1],x[0]))
-        #print(a)
+      
         imgep = builder.get_object("previmage")
-        print(imgloc)
-        #img = np.array(Image.open('/home/space-kerala/Downloads/test1.png'), dtype=np.uint8)
-        
-        #img = np.array(Image.open(imgloc), dtype=np.uint8)
-        #img = cv2.imread(imgloc,0)
+      
         img = mpimg.imread(imgloc)
         figureobject.ax.imshow(img, aspect = 'equal',extent = None)
 
-        #print (a)
-        #print(a[0][0])
+       
         for r in a:
-            #print (r)
-            #print (r[0])
+           
             lx1 = r[0]
             ly1 = r[1]
             lx2 = r[0] + r[2]
@@ -777,12 +726,12 @@ class Handler:
          
     
     def fit_image_window(self,widget):
-        print("fit image to window")
+       
         global imgloc
         
         global zoomout
         if imgloc == 0 :
-            print ("imgloc is  0")
+          
             errorwindow = builder.get_object("error_message_box")
             errorwindow.set_transient_for(window)
             errorwindow.set_markup("<b>No Image loaded to the application</b>")
@@ -793,7 +742,7 @@ class Handler:
             pixbuf = Pixbuf.new_from_file(imgloc)
             height = pixbuf.get_height()
             width = pixbuf.get_width()
-            print(height)
+         
             zoomout = zoomout + 1
             pixbuf = pixbuf.scale_simple(width/zoomout,height/zoomout, InterpType.BILINEAR)
             img = builder.get_object("previmage")
@@ -807,11 +756,11 @@ class Handler:
             return 0        
     
     def original_image_size(self,widget):
-        print("fit image to window")
+       
         global imgloc
         global zoomout
         if imgloc == 0 :
-            print ("imgloc is  0")
+          
             errorwindow = builder.get_object("error_message_box")
             errorwindow.set_transient_for(window)
             errorwindow.set_markup("<b>No Image loaded to the application</b>")
@@ -824,11 +773,11 @@ class Handler:
         zoomout =1     
 
     def do_skew_correction(self,widget):
-        print("i am doing skew correction")
+     
         global imgloc
         global skewcorrected
         if imgloc == 0 :
-            print ("imgloc is  0")
+         
             errorwindow = builder.get_object("error_message_box")
             errorwindow.set_transient_for(window)
             errorwindow.set_markup("<b>No Image loaded to the application</b>")
@@ -839,13 +788,9 @@ class Handler:
         elif skewcorrected == 0 :
             
             loc = imgloc
-            print(loc)
+          
             out=os.path.join(os.path.split(loc)[0],'skewcorrected'+os.path.splitext(os.path.split(loc)[1])[0]+os.path.splitext(os.path.split(loc)[1])[1])
-            #img=cv2.imread(loc,0)
-            #img= cv2.adaptiveThreshold(im,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY_INV,243,50)
-            
-            #cv2.imwrite(out,img)
-            
+           
             d = Deskew(
                    input_file=loc,
                    display_image=None,
@@ -854,7 +799,7 @@ class Handler:
             d.run()
             
             imgloc = out
-            print(imgloc)
+         
             img = builder.get_object("previmage")
             img.set_from_file(imgloc)
             skewcorrected = 1
@@ -868,7 +813,7 @@ class Handler:
 
         
         else:
-            print ("skewcorrected is  1")
+           
             errorwindow = builder.get_object("error_message_box")
             errorwindow.set_transient_for(window)
             errorwindow.set_markup("<b>Image already Skew Corrected</b>")
@@ -877,7 +822,7 @@ class Handler:
 
     def crop_button_clicked(self,widget):
         if imgloc == 0 :
-            print ("imgloc is  0")
+          
             errorwindow = builder.get_object("error_message_box")
             errorwindow.set_transient_for(window)
             errorwindow.set_markup("<b>No Image loaded to the application</b>")
@@ -903,7 +848,7 @@ class Handler:
             errorwindow.show()
             return 0   
         else:
-            print("rotate image 90")
+           
             img = Image.open(imgloc)
             img90_rotated = img.rotate(90,expand=True)
             out=out=os.path.join(os.path.split(imgloc)[0],'rotatedimage'+os.path.splitext(os.path.split(imgloc)[1])[1])
@@ -924,7 +869,7 @@ class Handler:
             errorwindow.show()
             return 0   
         else:
-            print("rotate image 180")
+         
             
             img = Image.open(imgloc)
             img180_rotated = img.rotate(180,expand=True)
