@@ -47,7 +47,7 @@ In other words, let the machine do most of the malayalam typing work for you.
 ## Main features
 
 * Scan
-* Import image from files
+* Import image from disk
 * Image layout analysis and feature to correct the result.
 * Malayalam ocr (lekha_ocrv2)
 * [Image Skew correction](https://github.com/kakul/Alyn/tree/master/alyn)
