@@ -48,25 +48,27 @@ In other words, let the machine do most of the malayalam typing work for you.
 
 * Scan
 * Import image from disk
-* Image layout analysis and feature to correct the result.
+* Image layout analysis and feature to correct the result : draw new box by selecting and then press enter to confirm  ,delete the incorrect layout analysed box by clicking on respective box.
 * Malayalam ocr (lekha_ocrv2)
-* [Image Skew correction](https://github.com/kakul/Alyn/tree/master/alyn)
+* [Image Skew correction](https://github.com/kakul/Alyn)
 * Rotate image
-* Crop image
-* Set Workspace Directory 
-* Save Output malayalam text to text file
+* Crop image : crop out unwanted parts of imported/scanned image using crop functionality.
+* Set Workspace Directory
+* Save Output malayalam text to text file.
 
 
 
 
-## Installation
+## Installation : Debian/Ubuntu
 
-* git clone https://github.com/space-kerala/LEKHA_OCR_VER2.0.git 
+* git clone https://gitlab.com/space-kerala/LEKHA_OCR_VER2.0.git
   (or Download zip and extract)
 * Navigate to the cloned or extracted directory
 * sudo apt-get update
 * sudo bash lekha2-install.sh
 * installation done  
+* Open the application by searching lekha ocr ver 2 in the dash
+* Set workspace directory under edit-> preference before any scan operation.
 
 ## To Uninstall
 * sudo bash uninstall.sh 
