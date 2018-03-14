@@ -112,4 +112,4 @@ GPLv3 only. See License.md
 
 ## Development
 
-All the information can be found on [ICFOSS Gitlab] (https://gitlab.com/icfoss/lekha-OCR)
+All the information can be found on [ICFOSS-Gitlab](https://gitlab.com/icfoss/lekha-OCR)
