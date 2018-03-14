@@ -100,9 +100,9 @@ It mainly uses:
 * Balagopal Unnikrishnan : Contributed in preparing XML label for training and helped in documentation of[Lekha ocr 1.0](https://gitlab.com/space-kerala/lekha-OCR)
 * Rijoy V : Contributed in initial research of [Lekha OCR ver 1.0](https://gitlab.com/space-kerala/lekha-OCR)
 
-## Supporters
+## Developers
    
-This project is developed by [SPACE-KERALA](https://github.com/space-kerala) in association with [ICFOSS](https://icfoss.in)
+This project is a joint initiative of [SPACE-KERALA](http://www.space-kerala.org/) & [ICFOSS](https://icfoss.in)
 
 
 ## Licence
@@ -112,4 +112,4 @@ GPLv3 only. See License.md
 
 ## Development
 
-All the information can be found on (https://github.com/space-kerala)
+All the information can be found on (https://gitlab.com/icfoss/lekha-OCR)
